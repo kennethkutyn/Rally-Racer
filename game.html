@@ -1,0 +1,1474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Rally Racer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bungee+Shade&family=Russo+One&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #111; display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; font-family: 'Courier New', monospace; }
+  canvas { display: block; image-rendering: pixelated; }
+  #ui {
+    position: absolute; top: 0; left: 0; width: 100%; pointer-events: none;
+    display: flex; justify-content: space-between; padding: 20px 40px;
+    color: #fff; font-size: 20px; text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+  }
+  #ui div { background: rgba(0,0,0,0.5); padding: 8px 16px; border-radius: 8px; }
+
+  /* Overlay / Splash */
+  #overlay {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    color: #fff; text-align: center;
+    background: radial-gradient(ellipse at 60% 40%, rgba(80,20,60,0.85) 0%, rgba(10,5,20,0.95) 100%);
+    z-index: 10;
+  }
+  #overlay.dead-screen { background: radial-gradient(ellipse at 50% 50%, rgba(100,10,10,0.88) 0%, rgba(10,5,20,0.95) 100%); }
+
+  .splash-title {
+    font-family: 'Bungee Shade', cursive;
+    font-size: clamp(42px, 8vw, 96px);
+    color: #ff4444;
+    text-shadow: 4px 4px 0 #000, 0 0 40px rgba(255,60,20,0.5);
+    line-height: 1.1;
+    animation: titlePulse 2s ease-in-out infinite;
+  }
+  .splash-subtitle {
+    font-family: 'Russo One', sans-serif;
+    font-size: clamp(16px, 3vw, 32px);
+    color: #ffcc00;
+    text-shadow: 2px 2px 0 #000;
+    margin-top: 8px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+  }
+  .splash-divider {
+    width: 200px; height: 3px; margin: 24px auto;
+    background: linear-gradient(90deg, transparent, #ff6600, #ffcc00, #ff6600, transparent);
+    border-radius: 2px;
+  }
+  .splash-controls {
+    display: flex; gap: 24px; margin: 16px 0 8px;
+    flex-wrap: wrap; justify-content: center;
+  }
+  .splash-key {
+    display: flex; flex-direction: column; align-items: center; gap: 4px;
+  }
+  .splash-key kbd {
+    font-family: 'Russo One', sans-serif;
+    background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.25);
+    border-radius: 6px; padding: 6px 12px; color: #fff; font-size: 14px;
+    box-shadow: 0 2px 0 rgba(0,0,0,0.4);
+    min-width: 40px; text-align: center;
+  }
+  .splash-key span {
+    font-size: 11px; color: #aaa; text-transform: uppercase; letter-spacing: 1px;
+  }
+  .play-btn {
+    font-family: 'Russo One', sans-serif;
+    font-size: clamp(18px, 2.5vw, 28px);
+    color: #111;
+    background: linear-gradient(180deg, #ffcc00, #ff8800);
+    border: none; border-radius: 50px;
+    padding: 16px 56px;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    box-shadow: 0 4px 15px rgba(255,140,0,0.4), 0 0 30px rgba(255,140,0,0.15);
+    transition: transform 0.15s, box-shadow 0.15s;
+    margin-top: 20px;
+    position: relative;
+    overflow: hidden;
+  }
+  .play-btn:hover {
+    transform: scale(1.06);
+    box-shadow: 0 6px 25px rgba(255,140,0,0.6), 0 0 50px rgba(255,140,0,0.25);
+  }
+  .play-btn:active { transform: scale(0.97); }
+  .play-btn::after {
+    content: '';
+    position: absolute; top: -50%; left: -60%; width: 40%; height: 200%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
+    transform: skewX(-20deg);
+    animation: btnShine 3s ease-in-out infinite;
+  }
+  .splash-hint {
+    font-size: 13px; color: #666; margin-top: 14px;
+  }
+  .splash-hint kbd { font-size: 12px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15); border-radius: 4px; padding: 2px 7px; color: #888; }
+
+  /* Death screen extras */
+  .death-score {
+    font-family: 'Russo One', sans-serif;
+    font-size: clamp(20px, 4vw, 40px);
+    color: #ffcc00;
+    text-shadow: 2px 2px 0 #000;
+    margin-top: 4px;
+  }
+  .death-hi {
+    font-family: 'Russo One', sans-serif;
+    font-size: 16px; color: #ff8866; margin-top: 2px;
+  }
+  .death-hi.new-record { color: #44ff88; }
+
+  /* Decorative animated cars on splash */
+  .splash-cars {
+    position: absolute; bottom: 18%; left: 0; width: 100%; height: 40px;
+    overflow: hidden; pointer-events: none;
+  }
+  .splash-car {
+    position: absolute; font-size: 28px;
+    animation: driveby linear infinite;
+  }
+  .splash-car:nth-child(1) { bottom: 0; animation-duration: 4s; animation-delay: 0s; }
+  .splash-car:nth-child(2) { bottom: 0; animation-duration: 5.5s; animation-delay: 1.5s; filter: hue-rotate(90deg); }
+  .splash-car:nth-child(3) { bottom: 0; animation-duration: 3.2s; animation-delay: 3s; filter: hue-rotate(200deg); }
+
+  /* Garage screen */
+  #overlay.garage-screen {
+    background: radial-gradient(ellipse at 50% 30%, rgba(20,40,80,0.92) 0%, rgba(8,8,20,0.97) 100%);
+  }
+  .garage-wrap {
+    display: flex; gap: 24px; align-items: flex-start; justify-content: center;
+    flex-wrap: wrap; max-width: 900px; width: 92%;
+  }
+  .garage-preview-box {
+    background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 16px; padding: 16px; display: flex; flex-direction: column; align-items: center;
+  }
+  .garage-preview-box canvas { border-radius: 10px; }
+  .garage-preview-label {
+    font-family: 'Russo One', sans-serif; font-size: 12px; color: #888;
+    margin-top: 8px; letter-spacing: 2px; text-transform: uppercase;
+  }
+  .garage-panel {
+    flex: 1; min-width: 280px; display: flex; flex-direction: column; gap: 8px;
+  }
+  .garage-row {
+    display: flex; align-items: center; gap: 8px;
+    background: rgba(255,255,255,0.05); border-radius: 10px; padding: 6px 12px;
+  }
+  .garage-row label {
+    font-family: 'Russo One', sans-serif; font-size: 12px; color: #ccc;
+    min-width: 56px; text-transform: uppercase; letter-spacing: 1px;
+  }
+  .garage-swatches { display: flex; gap: 5px; flex-wrap: wrap; }
+  .garage-swatch {
+    width: 28px; height: 28px; border-radius: 50%; border: 3px solid transparent;
+    cursor: pointer; transition: transform 0.12s, border-color 0.12s; flex-shrink: 0;
+  }
+  .garage-swatch:hover { transform: scale(1.15); }
+  .garage-swatch.selected { border-color: #ffcc00; transform: scale(1.12); box-shadow: 0 0 8px rgba(255,200,0,0.5); }
+  .garage-saved {
+    margin-top: 4px; max-height: 180px; overflow-y: auto;
+    display: flex; flex-direction: column; gap: 4px;
+  }
+  .garage-saved::-webkit-scrollbar { width: 4px; }
+  .garage-saved::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 2px; }
+  .garage-car-item {
+    display: flex; align-items: center; gap: 10px; padding: 8px 12px;
+    background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 8px; cursor: pointer; transition: background 0.15s;
+  }
+  .garage-car-item:hover { background: rgba(255,255,255,0.1); }
+  .garage-car-item.active { border-color: #ffcc00; background: rgba(255,200,0,0.08); }
+  .garage-car-item .swatch {
+    width: 24px; height: 24px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.2); flex-shrink: 0;
+  }
+  .garage-car-item .car-name {
+    font-family: 'Russo One', sans-serif; font-size: 13px; color: #ddd; flex: 1;
+  }
+  .garage-car-item .car-actions { display: flex; gap: 4px; }
+  .garage-car-item .car-act-btn {
+    font-size: 12px; cursor: pointer; padding: 2px 6px; border-radius: 4px;
+    transition: color 0.15s; font-family: 'Russo One', sans-serif;
+  }
+  .garage-car-item .car-edit { color: #5588bb; }
+  .garage-car-item .car-edit:hover { color: #66bbff; }
+  .garage-car-item .car-del { color: #664444; }
+  .garage-car-item .car-del:hover { color: #ff4444; }
+  .garage-btns {
+    display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap; justify-content: center;
+  }
+  .garage-btn {
+    font-family: 'Russo One', sans-serif; font-size: 13px; padding: 10px 22px;
+    border: none; border-radius: 8px; cursor: pointer; text-transform: uppercase;
+    letter-spacing: 1px; transition: transform 0.12s, opacity 0.12s;
+  }
+  .garage-btn:hover { transform: scale(1.04); }
+  .garage-btn:active { transform: scale(0.97); }
+  .garage-btn.save { background: linear-gradient(180deg, #44cc66, #228844); color: #fff; }
+  .garage-btn.back { background: linear-gradient(180deg, #666, #444); color: #fff; }
+  .garage-btn.race { background: linear-gradient(180deg, #ff8800, #cc5500); color: #fff; box-shadow: 0 4px 15px rgba(200,80,0,0.4); }
+  .garage-name-input {
+    font-family: 'Russo One', sans-serif; font-size: 13px;
+    background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 8px; padding: 10px 14px; color: #fff; flex: 1; min-width: 120px;
+    outline: none;
+  }
+  .garage-name-input::placeholder { color: #555; }
+  .garage-name-input:focus { border-color: #ffcc00; }
+  .garage-section-label {
+    font-family: 'Russo One', sans-serif; font-size: 11px; color: #555;
+    letter-spacing: 2px; text-transform: uppercase; margin-top: 6px;
+  }
+  .garage-create-box {
+    background: rgba(255,255,255,0.03); border: 1px dashed rgba(255,255,255,0.15);
+    border-radius: 10px; padding: 12px; display: flex; flex-direction: column; gap: 8px;
+  }
+  .garage-error {
+    font-family: 'Russo One', sans-serif; font-size: 11px; color: #ff6666;
+    display: none; margin-top: 2px;
+  }
+
+  /* Leaderboard */
+  .lb-table {
+    border-collapse: collapse; margin: 12px auto 0; width: 90%; max-width: 420px;
+  }
+  .lb-table th, .lb-table td {
+    font-family: 'Russo One', sans-serif; padding: 6px 12px; text-align: left;
+  }
+  .lb-table th {
+    font-size: 11px; color: #888; letter-spacing: 2px; text-transform: uppercase;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+  }
+  .lb-table td { font-size: 14px; color: #ddd; }
+  .lb-table td:first-child { color: #ffcc00; width: 36px; text-align: center; }
+  .lb-table td:last-child { text-align: right; color: #ff8866; }
+  .lb-table tr.lb-you td { color: #44ff88; }
+  .lb-table tr.lb-you td:first-child { color: #44ff88; }
+  .lb-table tr.lb-you td:last-child { color: #44ff88; }
+  .lb-name-prompt {
+    display: flex; gap: 10px; align-items: center; justify-content: center;
+    margin-top: 14px; flex-wrap: wrap;
+  }
+  .lb-name-input {
+    font-family: 'Russo One', sans-serif; font-size: 16px;
+    background: rgba(255,255,255,0.08); border: 2px solid rgba(255,200,0,0.4);
+    border-radius: 8px; padding: 10px 16px; color: #fff; width: 180px;
+    outline: none; text-align: center;
+  }
+  .lb-name-input::placeholder { color: #555; }
+  .lb-name-input:focus { border-color: #ffcc00; }
+  .lb-submit {
+    font-family: 'Russo One', sans-serif; font-size: 14px;
+    background: linear-gradient(180deg, #44cc66, #228844); color: #fff;
+    border: none; border-radius: 8px; padding: 10px 24px; cursor: pointer;
+    text-transform: uppercase; letter-spacing: 1px;
+    transition: transform 0.12s;
+  }
+  .lb-submit:hover { transform: scale(1.04); }
+  .lb-submit:active { transform: scale(0.97); }
+  .lb-label {
+    font-family: 'Russo One', sans-serif; font-size: 12px; color: #ffcc00;
+    letter-spacing: 2px; text-transform: uppercase; margin-top: 16px;
+  }
+
+  @keyframes titlePulse {
+    0%,100% { transform: scale(1); }
+    50% { transform: scale(1.02); }
+  }
+  @keyframes btnShine {
+    0%,100% { left: -60%; }
+    50% { left: 120%; }
+  }
+  @keyframes driveby {
+    from { left: -60px; }
+    to { left: calc(100% + 60px); }
+  }
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div id="ui">
+  <div id="score">SCORE: 0</div>
+  <div id="speed">SPEED: 0 km/h</div>
+  <div id="hi">HI: 0</div>
+</div>
+<div id="overlay" class="menu-screen">
+  <div class="splash-title">Rally Racer</div>
+  <div class="splash-subtitle">Side-Scroll Championship</div>
+  <div class="splash-divider"></div>
+  <div class="splash-controls">
+    <div class="splash-key"><kbd>&uarr; &darr;</kbd><span>Steer</span></div>
+    <div class="splash-key"><kbd>&rarr;</kbd><span>Gas</span></div>
+    <div class="splash-key"><kbd>&larr;</kbd><span>Brake</span></div>
+    <div class="splash-key"><kbd>Space</kbd><span>Boost</span></div>
+  </div>
+  <div style="display:flex; gap:16px; flex-wrap:wrap; justify-content:center; margin-top:20px;">
+    <button class="play-btn" id="playBtn">Play Now</button>
+    <button class="play-btn" id="garageBtn" style="background:linear-gradient(180deg,#4488ff,#2255cc);color:#fff;box-shadow:0 4px 15px rgba(40,80,200,0.4),0 0 30px rgba(40,80,200,0.15);">Garage</button>
+    <button class="play-btn" id="lbBtn" style="background:linear-gradient(180deg,#cc44ff,#8822cc);color:#fff;box-shadow:0 4px 15px rgba(160,40,220,0.4),0 0 30px rgba(160,40,220,0.15);font-size:clamp(14px,2vw,20px);padding:14px 32px;">Leaderboard</button>
+  </div>
+  <div class="splash-hint">or press <kbd>Enter</kbd> to race</div>
+  <div class="splash-cars">
+    <div class="splash-car">&#x1F3CE;&#xFE0F;</div>
+    <div class="splash-car">&#x1F3CE;&#xFE0F;</div>
+    <div class="splash-car">&#x1F3CE;&#xFE0F;</div>
+  </div>
+</div>
+
+<script>
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+const overlay = document.getElementById('overlay');
+const scoreEl = document.getElementById('score');
+const speedEl = document.getElementById('speed');
+const hiEl = document.getElementById('hi');
+
+let W, H;
+function resize() {
+  W = canvas.width = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+}
+resize();
+window.addEventListener('resize', resize);
+
+// Game state
+let state = 'menu'; // menu, playing, dead
+let score = 0, hiScore = 0, gameSpeed = 0, maxSpeed = 12;
+let shakeX = 0, shakeY = 0;
+
+// Car customization
+const defaultCarConfig = { name: 'Stock Orange', body: '#ff8800', cabin: '#cc6600', wheels: '#222222', lights: '#ffee88', flame: '#ff6600' };
+let carConfig = { ...defaultCarConfig };
+let garage = [];
+function loadGarage() {
+  try { garage = JSON.parse(localStorage.getItem('rallyGarage') || '[]'); } catch(e) { garage = []; }
+  const active = localStorage.getItem('rallyActiveCar');
+  if (active) try { Object.assign(carConfig, JSON.parse(active)); } catch(e) {}
+}
+function saveGarage() {
+  localStorage.setItem('rallyGarage', JSON.stringify(garage));
+  localStorage.setItem('rallyActiveCar', JSON.stringify(carConfig));
+}
+loadGarage();
+
+// Leaderboard (Firebase REST API)
+let leaderboard = [];
+let leaderboardLoaded = false;
+const FB_URL = 'https://rally-racer-d5dab-default-rtdb.asia-southeast1.firebasedatabase.app';
+
+async function loadLeaderboard() {
+  try {
+    const res = await fetch(`${FB_URL}/leaderboard.json`);
+    const data = await res.json();
+    leaderboard = data ? Object.values(data).filter(e => e && typeof e.score === 'number') : [];
+    leaderboard.sort((a, b) => b.score - a.score);
+    leaderboard = leaderboard.slice(0, 10);
+  } catch(e) {
+    console.warn('Leaderboard fetch failed, using local cache');
+    try { leaderboard = JSON.parse(localStorage.getItem('rallyLeaderboard') || '[]'); } catch(e) { leaderboard = []; }
+  }
+  leaderboardLoaded = true;
+}
+function isTopScore(s) {
+  return leaderboard.length < 10 || s > leaderboard[leaderboard.length - 1].score;
+}
+function addToLeaderboard(name, s) {
+  const entry = { name: name.slice(0, 16), score: s, ts: Date.now() };
+  // Optimistic local update so UI is instant
+  leaderboard.push(entry);
+  leaderboard.sort((a, b) => b.score - a.score);
+  if (leaderboard.length > 10) leaderboard.length = 10;
+  localStorage.setItem('rallyLeaderboard', JSON.stringify(leaderboard));
+  // Fire-and-forget write to Firebase
+  fetch(`${FB_URL}/leaderboard.json`, {
+    method: 'POST',
+    body: JSON.stringify(entry)
+  }).catch(e => console.warn('Score upload failed:', e));
+}
+function leaderboardHTML(highlightScore) {
+  if (!leaderboardLoaded) return '<div style="color:#888;font-size:13px;margin-top:12px;">Loading global scores...</div>';
+  if (leaderboard.length === 0) return '<div style="color:#555;font-size:13px;margin-top:12px;">No scores yet. Be the first!</div>';
+  let rows = leaderboard.map((e, i) => {
+    const isYou = e.score === highlightScore && e.name !== undefined;
+    return `<tr class="${isYou ? 'lb-you' : ''}"><td>${i + 1}</td><td>${e.name}</td><td>${e.score.toLocaleString()}</td></tr>`;
+  }).join('');
+  return `<table class="lb-table"><tr><th>#</th><th>Name</th><th>Score</th></tr>${rows}</table>`;
+}
+loadLeaderboard();
+
+// Keys
+const keys = {};
+window.addEventListener('keydown', e => { keys[e.code] = true; if (e.code === 'Enter' && state !== 'playing' && state !== 'garage' && !document.getElementById('lbNameInput')) startGame(); });
+window.addEventListener('keyup', e => keys[e.code] = false);
+document.getElementById('playBtn').addEventListener('click', () => { if (state !== 'playing') startGame(); });
+
+// Player car
+const player = { x: 0, y: 0, w: 80, h: 40, vy: 0, speed: 0, tilt: 0, boost: 0, trail: [] };
+
+// Road
+const road = { y: 0, segments: [], stripeOffset: 0 };
+const ROAD_TOP = () => H * 0.25;
+const ROAD_BOT = () => H * 0.85;
+const ROAD_H = () => ROAD_BOT() - ROAD_TOP();
+const LANES = 4;
+
+// Obstacles, scenery, particles
+let obstacles = [], scenery = [], particles = [], sparks = [];
+
+function startGame() {
+  state = 'playing';
+  score = 0;
+  gameSpeed = 3;
+  player.x = 150;
+  player.y = ROAD_TOP() + ROAD_H() * 0.5;
+  player.vy = 0;
+  player.speed = 0;
+  player.tilt = 0;
+  player.boost = 0;
+  player.trail = [];
+  obstacles = [];
+  scenery = [];
+  particles = [];
+  sparks = [];
+  road.stripeOffset = 0;
+  overlay.style.display = 'none';
+  overlay.className = '';
+  // Pre-populate scenery
+  for (let i = 0; i < 20; i++) {
+    scenery.push(createScenery(Math.random() * W));
+  }
+}
+
+function createScenery(x) {
+  const top = Math.random() < 0.5;
+  return {
+    x,
+    y: top ? ROAD_TOP() - 30 - Math.random() * 100 : ROAD_BOT() + 20 + Math.random() * 80,
+    type: ['tree', 'rock', 'bush', 'cactus'][Math.floor(Math.random() * 4)],
+    size: 15 + Math.random() * 25,
+    top
+  };
+}
+
+function difficulty() {
+  // Returns 0..1 representing how far into the difficulty curve we are
+  return Math.min(1, score / 50000);
+}
+
+function createObstacle() {
+  const d = difficulty();
+  const margin = 25; // keep cars off the very edge of the road
+  const roadTop = ROAD_TOP() + margin;
+  const roadBot = ROAD_BOT() - margin;
+
+  // Y position: random across the full road height, not snapped to lanes
+  const y = roadTop + Math.random() * (roadBot - roadTop);
+
+  const types = ['car_red', 'car_blue', 'car_green', 'truck', 'cone'];
+  const type = types[Math.floor(Math.random() * types.length)];
+  const isTruck = type === 'truck';
+  const isCone = type === 'cone';
+
+  // Swerve gets more common and aggressive with difficulty
+  const swerveChance = 0.15 + d * 0.45; // 15% -> 60%
+  const swerveStrength = 0.3 + d * 0.8;  // mild -> aggressive
+  let swerve = 0;
+  if (Math.random() < swerveChance) {
+    swerve = (Math.random() - 0.5) * swerveStrength;
+  }
+
+  // Obstacle speed increases with difficulty
+  const baseSpeed = isCone ? 0 : 1 + Math.random() * 2;
+  const speedBonus = isCone ? 0 : d * 2; // cars get faster over time
+
+  return {
+    x: W + 100 + Math.random() * 80, // slight x variation so groups don't form a wall
+    y,
+    w: isTruck ? 100 : isCone ? 20 : 70,
+    h: isTruck ? 45 : isCone ? 20 : 35,
+    type,
+    speed: baseSpeed + speedBonus,
+    swerve
+  };
+}
+
+// Spawn a tight cluster of obstacles (harder to dodge)
+function spawnCluster() {
+  const count = 2 + Math.floor(Math.random() * 2); // 2-3 cars
+  const baseY = ROAD_TOP() + 30 + Math.random() * (ROAD_H() - 60);
+  for (let i = 0; i < count; i++) {
+    const o = createObstacle();
+    // Spread across lanes but at similar X
+    o.x = W + 100 + i * (60 + Math.random() * 40);
+    // Space them vertically but keep them in a band that forces maneuvering
+    o.y = Math.max(ROAD_TOP() + 25, Math.min(ROAD_BOT() - 25,
+      baseY + (i - 1) * (ROAD_H() / LANES) * (0.6 + Math.random() * 0.8)));
+    obstacles.push(o);
+  }
+}
+
+// Draw functions
+function drawRoad() {
+  // Road base
+  const gradient = ctx.createLinearGradient(0, ROAD_TOP(), 0, ROAD_BOT());
+  gradient.addColorStop(0, '#444');
+  gradient.addColorStop(0.5, '#555');
+  gradient.addColorStop(1, '#444');
+  ctx.fillStyle = gradient;
+  ctx.fillRect(0, ROAD_TOP(), W, ROAD_H());
+
+  // Road edges
+  ctx.fillStyle = '#fff';
+  ctx.fillRect(0, ROAD_TOP() - 3, W, 6);
+  ctx.fillRect(0, ROAD_BOT() - 3, W, 6);
+
+  // Lane stripes
+  const laneH = ROAD_H() / LANES;
+  road.stripeOffset = (road.stripeOffset + gameSpeed * 3) % 40;
+  ctx.setLineDash([20, 20]);
+  ctx.lineDashOffset = -road.stripeOffset;
+  ctx.strokeStyle = 'rgba(255,255,255,0.4)';
+  ctx.lineWidth = 2;
+  for (let i = 1; i < LANES; i++) {
+    const y = ROAD_TOP() + laneH * i;
+    ctx.beginPath();
+    ctx.moveTo(0, y);
+    ctx.lineTo(W, y);
+    ctx.stroke();
+  }
+  ctx.setLineDash([]);
+
+  // Rumble strips
+  const rumbleW = 12;
+  const rumbleCount = Math.ceil(W / 30) + 1;
+  for (let i = 0; i < rumbleCount; i++) {
+    const rx = (i * 30 - road.stripeOffset * 0.75) % (W + 30);
+    ctx.fillStyle = i % 2 === 0 ? '#ff0000' : '#fff';
+    ctx.fillRect(rx, ROAD_TOP() - rumbleW, 15, rumbleW);
+    ctx.fillRect(rx, ROAD_BOT(), 15, rumbleW);
+  }
+}
+
+function drawCar(x, y, w, h, color1, color2, isPlayer) {
+  ctx.save();
+  ctx.translate(x, y);
+  if (isPlayer) ctx.rotate(player.tilt * 0.05);
+
+  const wheelColor = isPlayer ? carConfig.wheels : '#222';
+  const bodyColor = isPlayer ? carConfig.body : color1;
+  const cabinColor = isPlayer ? carConfig.cabin : color2;
+  const lightColor = isPlayer ? carConfig.lights : '#ffee88';
+  const flameColor = isPlayer ? carConfig.flame : '#ff6600';
+
+  // Shadow
+  ctx.fillStyle = 'rgba(0,0,0,0.3)';
+  ctx.beginPath();
+  ctx.ellipse(2, h / 2 + 4, w / 2, 8, 0, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Body
+  ctx.fillStyle = bodyColor;
+  roundRect(-w/2, -h/2, w, h, 6);
+  ctx.fill();
+
+  // Cabin
+  ctx.fillStyle = cabinColor;
+  roundRect(-w/4, -h/2 + 4, w/2.5, h - 8, 3);
+  ctx.fill();
+
+  // Windshield
+  ctx.fillStyle = 'rgba(150,200,255,0.7)';
+  roundRect(w/5, -h/2 + 6, w/5, h - 12, 2);
+  ctx.fill();
+
+  // Wheels
+  ctx.fillStyle = wheelColor;
+  const whl = 10, whw = 6;
+  ctx.fillRect(-w/2 + 3, -h/2 - 2, whl, whw);
+  ctx.fillRect(-w/2 + 3, h/2 - whw + 2, whl, whw);
+  ctx.fillRect(w/2 - whl - 3, -h/2 - 2, whl, whw);
+  ctx.fillRect(w/2 - whl - 3, h/2 - whw + 2, whl, whw);
+
+  if (isPlayer) {
+    // Headlights
+    ctx.fillStyle = lightColor;
+    ctx.beginPath();
+    ctx.ellipse(w/2, -h/4, 4, 3, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.ellipse(w/2, h/4, 4, 3, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Light beams
+    ctx.fillStyle = hexToRgba(lightColor, 0.08);
+    ctx.beginPath();
+    ctx.moveTo(w/2, -h/3);
+    ctx.lineTo(w/2 + 120, -h);
+    ctx.lineTo(w/2 + 120, h);
+    ctx.lineTo(w/2, h/3);
+    ctx.fill();
+
+    // Exhaust
+    if (gameSpeed > 5) {
+      for (let i = 0; i < 3; i++) {
+        ctx.fillStyle = `rgba(200,200,200,${0.3 - i * 0.1})`;
+        ctx.beginPath();
+        ctx.arc(-w/2 - 8 - i * 10, h/4 + Math.random() * 4, 3 + i * 2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    // Boost flame
+    if (player.boost > 0) {
+      const flameLen = 20 + Math.random() * 15;
+      const grad = ctx.createLinearGradient(-w/2, 0, -w/2 - flameLen, 0);
+      grad.addColorStop(0, flameColor);
+      grad.addColorStop(0.5, lightenColor(flameColor, 60));
+      grad.addColorStop(1, hexToRgba(flameColor, 0));
+      ctx.fillStyle = grad;
+      ctx.beginPath();
+      ctx.moveTo(-w/2, -h/4);
+      ctx.lineTo(-w/2 - flameLen, 0);
+      ctx.lineTo(-w/2, h/4);
+      ctx.fill();
+    }
+  }
+
+  ctx.restore();
+}
+
+function drawTruck(x, y) {
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.fillStyle = 'rgba(0,0,0,0.3)';
+  ctx.beginPath();
+  ctx.ellipse(2, 26, 50, 8, 0, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.fillStyle = '#8B4513';
+  roundRect(-50, -20, 70, 40, 4);
+  ctx.fill();
+  ctx.fillStyle = '#DAA520';
+  roundRect(20, -18, 30, 36, 4);
+  ctx.fill();
+  ctx.fillStyle = '#222';
+  ctx.fillRect(-45, -24, 10, 6);
+  ctx.fillRect(-45, 18, 10, 6);
+  ctx.fillRect(35, -24, 10, 6);
+  ctx.fillRect(35, 18, 10, 6);
+  ctx.restore();
+}
+
+function drawCone(x, y) {
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.fillStyle = '#ff6600';
+  ctx.beginPath();
+  ctx.moveTo(0, -12);
+  ctx.lineTo(-8, 8);
+  ctx.lineTo(8, 8);
+  ctx.closePath();
+  ctx.fill();
+  ctx.fillStyle = '#fff';
+  ctx.fillRect(-6, -2, 12, 3);
+  ctx.fillRect(-3, -8, 6, 3);
+  ctx.restore();
+}
+
+function drawSceneryItem(s) {
+  ctx.save();
+  ctx.translate(s.x, s.y);
+  const sz = s.size;
+  switch (s.type) {
+    case 'tree':
+      ctx.fillStyle = '#4a2810';
+      ctx.fillRect(-3, -sz * 0.3, 6, sz * 0.6);
+      ctx.fillStyle = '#2d6e1e';
+      ctx.beginPath();
+      ctx.arc(0, -sz * 0.3, sz * 0.5, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = '#3a8a28';
+      ctx.beginPath();
+      ctx.arc(-3, -sz * 0.35, sz * 0.35, 0, Math.PI * 2);
+      ctx.fill();
+      break;
+    case 'rock':
+      ctx.fillStyle = '#777';
+      ctx.beginPath();
+      ctx.ellipse(0, 0, sz * 0.5, sz * 0.35, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = '#888';
+      ctx.beginPath();
+      ctx.ellipse(-2, -2, sz * 0.35, sz * 0.25, 0.3, 0, Math.PI * 2);
+      ctx.fill();
+      break;
+    case 'bush':
+      ctx.fillStyle = '#2a5e16';
+      ctx.beginPath();
+      ctx.ellipse(0, 0, sz * 0.5, sz * 0.35, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = '#3a7e26';
+      ctx.beginPath();
+      ctx.ellipse(sz * 0.2, -sz * 0.1, sz * 0.3, sz * 0.25, 0, 0, Math.PI * 2);
+      ctx.fill();
+      break;
+    case 'cactus':
+      ctx.fillStyle = '#3a7a2a';
+      ctx.fillRect(-4, -sz * 0.5, 8, sz);
+      ctx.fillRect(-4, -sz * 0.3, -12, 6);
+      ctx.fillRect(-16, -sz * 0.3, 6, -15);
+      ctx.fillRect(4, -sz * 0.1, 10, 6);
+      ctx.fillRect(14, -sz * 0.1, -6, -12);
+      break;
+  }
+  ctx.restore();
+}
+
+function roundRect(x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.lineTo(x + w - r, y);
+  ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+  ctx.lineTo(x + w, y + h - r);
+  ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+  ctx.lineTo(x + r, y + h);
+  ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+  ctx.lineTo(x, y + r);
+  ctx.quadraticCurveTo(x, y, x + r, y);
+  ctx.closePath();
+}
+
+function spawnParticles(x, y, count, color) {
+  for (let i = 0; i < count; i++) {
+    sparks.push({
+      x, y,
+      vx: (Math.random() - 0.5) * 8,
+      vy: (Math.random() - 0.5) * 8,
+      life: 30 + Math.random() * 20,
+      maxLife: 50,
+      color,
+      size: 2 + Math.random() * 3
+    });
+  }
+}
+
+function update() {
+  if (state !== 'playing') return;
+
+  // Acceleration
+  if (keys['ArrowRight'] || keys['KeyD']) {
+    gameSpeed = Math.min(maxSpeed, gameSpeed + 0.08);
+  } else if (keys['ArrowLeft'] || keys['KeyA']) {
+    gameSpeed = Math.max(1, gameSpeed - 0.12);
+  } else {
+    gameSpeed = Math.max(2, gameSpeed - 0.01);
+  }
+
+  // Vertical movement
+  const moveSpeed = 5;
+  if (keys['ArrowUp'] || keys['KeyW']) {
+    player.vy = Math.max(-moveSpeed, player.vy - 0.6);
+    player.tilt = Math.max(-1, player.tilt - 0.15);
+  } else if (keys['ArrowDown'] || keys['KeyS']) {
+    player.vy = Math.min(moveSpeed, player.vy + 0.6);
+    player.tilt = Math.min(1, player.tilt + 0.15);
+  } else {
+    player.vy *= 0.85;
+    player.tilt *= 0.9;
+  }
+
+  // Boost
+  if (keys['Space'] && player.boost > 0) {
+    gameSpeed = Math.min(maxSpeed + 4, gameSpeed + 0.3);
+    player.boost -= 0.5;
+  }
+
+  player.y += player.vy;
+  player.y = Math.max(ROAD_TOP() + player.h / 2 + 5, Math.min(ROAD_BOT() - player.h / 2 - 5, player.y));
+
+  // Trail
+  player.trail.push({ x: player.x - player.w / 2, y: player.y });
+  if (player.trail.length > 20) player.trail.shift();
+
+  // Score
+  score += Math.floor(gameSpeed * 0.5);
+  if (score > hiScore) hiScore = score;
+
+  // Difficulty ramp - gradual across all dimensions
+  const d = difficulty();
+  maxSpeed = 12 + d * 6;           // top speed increases
+  const baseSpawn = 70 - d * 40;   // frames between spawns: 70 -> 30
+  const spawnRate = Math.max(15, baseSpawn - gameSpeed * 1.5);
+
+  // Boost regen slows slightly with difficulty
+  player.boost = Math.min(100, player.boost + (0.06 - d * 0.02));
+
+  // Spawn obstacles - single cars + occasional clusters at higher difficulty
+  if (Math.random() < 1 / spawnRate) {
+    // Chance to spawn a cluster instead of a single car (scales with difficulty)
+    if (d > 0.15 && Math.random() < d * 0.35) {
+      spawnCluster();
+    } else {
+      obstacles.push(createObstacle());
+    }
+  }
+
+  // Update obstacles
+  for (let i = obstacles.length - 1; i >= 0; i--) {
+    const o = obstacles[i];
+    o.x -= gameSpeed * 2 + o.speed;
+    o.y += o.swerve;
+    o.y = Math.max(ROAD_TOP() + o.h / 2, Math.min(ROAD_BOT() - o.h / 2, o.y));
+
+    if (o.x < -120) {
+      obstacles.splice(i, 1);
+      continue;
+    }
+
+    // Collision
+    const dx = Math.abs(player.x - o.x);
+    const dy = Math.abs(player.y - o.y);
+    const hw = (player.w + o.w) / 2 - 10;
+    const hh = (player.h + o.h) / 2 - 6;
+    if (dx < hw && dy < hh) {
+      die(o);
+    }
+  }
+
+  // Scenery
+  for (let i = scenery.length - 1; i >= 0; i--) {
+    scenery[i].x -= gameSpeed * (scenery[i].top ? 1.5 : 2);
+    if (scenery[i].x < -50) {
+      scenery[i] = createScenery(W + 50 + Math.random() * 100);
+    }
+  }
+
+  // Sparks
+  for (let i = sparks.length - 1; i >= 0; i--) {
+    const s = sparks[i];
+    s.x += s.vx;
+    s.y += s.vy;
+    s.life--;
+    s.vy += 0.1;
+    if (s.life <= 0) sparks.splice(i, 1);
+  }
+
+  // Shake decay
+  shakeX *= 0.9;
+  shakeY *= 0.9;
+}
+
+function die(obstacle) {
+  state = 'dead';
+  spawnParticles(player.x, player.y, 30, '#ff4400');
+  spawnParticles(player.x, player.y, 20, '#ffcc00');
+  spawnParticles(obstacle.x, obstacle.y, 15, '#ff8800');
+  shakeX = (Math.random() - 0.5) * 20;
+  shakeY = (Math.random() - 0.5) * 20;
+  setTimeout(async () => {
+    await loadLeaderboard();
+    const isNewRecord = score >= hiScore && score > 0;
+    const madeTop10 = score > 0 && isTopScore(score);
+    overlay.className = 'dead-screen';
+
+    if (madeTop10) {
+      // Ask for name first, then show leaderboard
+      overlay.innerHTML = `
+        <div class="splash-title" style="font-size:clamp(36px,7vw,80px)">Wrecked!</div>
+        <div class="splash-divider"></div>
+        <div class="death-score">Score: ${score.toLocaleString()}</div>
+        <div class="death-hi ${isNewRecord ? 'new-record' : ''}">
+          ${isNewRecord ? 'NEW RECORD!' : 'Best: ' + hiScore.toLocaleString()}
+        </div>
+        <div class="lb-label">Top 10! Enter your name:</div>
+        <div class="lb-name-prompt">
+          <input class="lb-name-input" id="lbNameInput" placeholder="Your name" maxlength="16" autofocus>
+          <button class="lb-submit" id="lbSubmit">Submit</button>
+        </div>
+      `;
+      overlay.style.display = 'flex';
+      const nameInput = document.getElementById('lbNameInput');
+      const submitName = () => {
+        const name = nameInput.value.trim() || 'Anonymous';
+        addToLeaderboard(name, score);
+        showDeathLeaderboard(isNewRecord, score);
+      };
+      document.getElementById('lbSubmit').addEventListener('click', submitName);
+      nameInput.addEventListener('keydown', e => { if (e.code === 'Enter') { e.preventDefault(); e.stopPropagation(); submitName(); } });
+      nameInput.focus();
+    } else {
+      // Didn't make top 10 — show score + leaderboard
+      showDeathLeaderboard(isNewRecord, null);
+    }
+  }, 800);
+}
+
+function showDeathLeaderboard(isNewRecord, highlightScore) {
+  overlay.className = 'dead-screen';
+  overlay.innerHTML = `
+    <div class="splash-title" style="font-size:clamp(36px,7vw,80px)">Wrecked!</div>
+    <div class="splash-divider"></div>
+    <div class="death-score">Score: ${score.toLocaleString()}</div>
+    <div class="death-hi ${isNewRecord ? 'new-record' : ''}">
+      ${isNewRecord ? 'NEW RECORD!' : 'Best: ' + hiScore.toLocaleString()}
+    </div>
+    <div class="lb-label">Leaderboard</div>
+    ${leaderboardHTML(highlightScore)}
+    <div style="display:flex; gap:12px; flex-wrap:wrap; justify-content:center; margin-top:16px;">
+      <button class="play-btn" id="retryBtn">Race Again</button>
+      <button class="play-btn" id="deathGarageBtn" style="background:linear-gradient(180deg,#4488ff,#2255cc);color:#fff;box-shadow:0 4px 15px rgba(40,80,200,0.4),0 0 30px rgba(40,80,200,0.15);">Garage</button>
+    </div>
+    <div class="splash-hint">or press <kbd>Enter</kbd> to race</div>
+  `;
+  overlay.style.display = 'flex';
+  document.getElementById('retryBtn').addEventListener('click', () => { if (state !== 'playing') startGame(); });
+  document.getElementById('deathGarageBtn').addEventListener('click', () => showGarage());
+}
+
+function drawBackground() {
+  // Sky gradient
+  const skyGrad = ctx.createLinearGradient(0, 0, 0, ROAD_TOP());
+  skyGrad.addColorStop(0, '#1a0a2e');
+  skyGrad.addColorStop(0.5, '#4a1942');
+  skyGrad.addColorStop(1, '#c7442d');
+  ctx.fillStyle = skyGrad;
+  ctx.fillRect(0, 0, W, ROAD_TOP());
+
+  // Sun
+  const sunX = W * 0.75;
+  const sunY = ROAD_TOP() * 0.5;
+  const sunGrad = ctx.createRadialGradient(sunX, sunY, 0, sunX, sunY, 120);
+  sunGrad.addColorStop(0, 'rgba(255,200,50,0.8)');
+  sunGrad.addColorStop(0.3, 'rgba(255,150,50,0.3)');
+  sunGrad.addColorStop(1, 'rgba(255,100,50,0)');
+  ctx.fillStyle = sunGrad;
+  ctx.fillRect(0, 0, W, ROAD_TOP());
+  ctx.fillStyle = '#ffcc44';
+  ctx.beginPath();
+  ctx.arc(sunX, sunY, 30, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Mountains
+  ctx.fillStyle = '#2a1a3a';
+  ctx.beginPath();
+  ctx.moveTo(0, ROAD_TOP());
+  for (let x = 0; x <= W; x += 60) {
+    ctx.lineTo(x, ROAD_TOP() - 20 - Math.sin(x * 0.008) * 40 - Math.sin(x * 0.015) * 25);
+  }
+  ctx.lineTo(W, ROAD_TOP());
+  ctx.fill();
+
+  // Ground below road
+  ctx.fillStyle = '#5a4a2a';
+  ctx.fillRect(0, ROAD_BOT(), W, H - ROAD_BOT());
+}
+
+function drawBoostMeter() {
+  const bx = 20, by = H - 50, bw = 150, bh = 16;
+  ctx.fillStyle = 'rgba(0,0,0,0.5)';
+  roundRect(bx - 2, by - 2, bw + 4, bh + 4, 4);
+  ctx.fill();
+  const pct = player.boost / 100;
+  const grad = ctx.createLinearGradient(bx, 0, bx + bw * pct, 0);
+  grad.addColorStop(0, '#ff6600');
+  grad.addColorStop(1, '#ffcc00');
+  ctx.fillStyle = grad;
+  roundRect(bx, by, bw * pct, bh, 3);
+  ctx.fill();
+  ctx.fillStyle = '#fff';
+  ctx.font = '11px Courier New';
+  ctx.fillText('BOOST [SPACE]', bx, by - 6);
+}
+
+function draw() {
+  ctx.save();
+  ctx.translate(shakeX, shakeY);
+
+  ctx.fillStyle = '#111';
+  ctx.fillRect(0, 0, W, H);
+
+  drawBackground();
+
+  // Scenery behind road
+  scenery.filter(s => s.top).forEach(drawSceneryItem);
+
+  drawRoad();
+
+  // Scenery in front of road
+  scenery.filter(s => !s.top).forEach(drawSceneryItem);
+
+  // Trail
+  if (state === 'playing' && player.trail.length > 1) {
+    ctx.strokeStyle = 'rgba(255,150,0,0.15)';
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.moveTo(player.trail[0].x, player.trail[0].y - player.h / 4);
+    for (const t of player.trail) ctx.lineTo(t.x, t.y - player.h / 4);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(player.trail[0].x, player.trail[0].y + player.h / 4);
+    for (const t of player.trail) ctx.lineTo(t.x, t.y + player.h / 4);
+    ctx.stroke();
+  }
+
+  // Obstacles
+  for (const o of obstacles) {
+    if (o.type === 'truck') {
+      drawTruck(o.x, o.y);
+    } else if (o.type === 'cone') {
+      drawCone(o.x, o.y);
+    } else {
+      const colors = {
+        car_red: ['#cc2222', '#991111'],
+        car_blue: ['#2244cc', '#1133aa'],
+        car_green: ['#22aa44', '#118833'],
+      };
+      const [c1, c2] = colors[o.type] || ['#888', '#666'];
+      drawCar(o.x, o.y, o.w, o.h, c1, c2, false);
+    }
+  }
+
+  // Player
+  if (state !== 'dead') {
+    drawCar(player.x, player.y, player.w, player.h, '#ff8800', '#cc6600', true);
+  }
+
+  // Sparks
+  for (const s of sparks) {
+    const alpha = s.life / s.maxLife;
+    ctx.fillStyle = s.color + Math.floor(alpha * 255).toString(16).padStart(2, '0');
+    ctx.beginPath();
+    ctx.arc(s.x, s.y, s.size * alpha, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  // Speed lines
+  if (gameSpeed > 8 && state === 'playing') {
+    ctx.strokeStyle = `rgba(255,255,255,${(gameSpeed - 8) * 0.04})`;
+    ctx.lineWidth = 1;
+    for (let i = 0; i < 5; i++) {
+      const ly = ROAD_TOP() + Math.random() * ROAD_H();
+      const lx = Math.random() * W;
+      ctx.beginPath();
+      ctx.moveTo(lx, ly);
+      ctx.lineTo(lx - 30 - gameSpeed * 3, ly);
+      ctx.stroke();
+    }
+  }
+
+  ctx.restore();
+
+  // UI
+  if (state === 'playing') {
+    scoreEl.textContent = `SCORE: ${score.toLocaleString()}`;
+    speedEl.textContent = `SPEED: ${Math.floor(gameSpeed * 20)} km/h`;
+    hiEl.textContent = `HI: ${hiScore.toLocaleString()}`;
+    drawBoostMeter();
+  }
+}
+
+function loop() {
+  update();
+  draw();
+  // Garage preview animation
+  if (state === 'garage') drawGaragePreview();
+  // Keep sparks animating after death
+  if (state === 'dead') {
+    for (let i = sparks.length - 1; i >= 0; i--) {
+      sparks[i].x += sparks[i].vx;
+      sparks[i].y += sparks[i].vy;
+      sparks[i].life--;
+      sparks[i].vy += 0.15;
+      if (sparks[i].life <= 0) sparks.splice(i, 1);
+    }
+    shakeX *= 0.92;
+    shakeY *= 0.92;
+  }
+  requestAnimationFrame(loop);
+}
+
+// ---- Leaderboard screen (from splash) ----
+async function showLeaderboardScreen() {
+  await loadLeaderboard();
+  state = 'menu';
+  overlay.className = 'menu-screen';
+  overlay.innerHTML = `
+    <div class="splash-title" style="font-size:clamp(28px,5vw,52px);margin-bottom:4px;">Global Leaderboard</div>
+    <div class="splash-divider"></div>
+    ${leaderboardHTML(null)}
+    <button class="play-btn" id="lbBackBtn" style="margin-top:20px;background:linear-gradient(180deg,#666,#444);color:#fff;box-shadow:none;font-size:clamp(14px,2vw,20px);padding:12px 36px;">Back</button>
+  `;
+  overlay.style.display = 'flex';
+  document.getElementById('lbBackBtn').addEventListener('click', () => showSplash());
+}
+
+// ---- Garage system ----
+let garagePreviewCtx = null;
+let garageAnimFrame = 0;
+
+function showSplash() {
+  state = 'menu';
+  overlay.className = 'menu-screen';
+  overlay.innerHTML = `
+    <div class="splash-title">Rally Racer</div>
+    <div class="splash-subtitle">Side-Scroll Championship</div>
+    <div class="splash-divider"></div>
+    <div class="splash-controls">
+      <div class="splash-key"><kbd>&uarr; &darr;</kbd><span>Steer</span></div>
+      <div class="splash-key"><kbd>&rarr;</kbd><span>Gas</span></div>
+      <div class="splash-key"><kbd>&larr;</kbd><span>Brake</span></div>
+      <div class="splash-key"><kbd>Space</kbd><span>Boost</span></div>
+    </div>
+    <div style="display:flex; gap:16px; flex-wrap:wrap; justify-content:center; margin-top:20px;">
+      <button class="play-btn" id="playBtn">Play Now</button>
+      <button class="play-btn" id="garageBtn" style="background:linear-gradient(180deg,#4488ff,#2255cc);color:#fff;box-shadow:0 4px 15px rgba(40,80,200,0.4),0 0 30px rgba(40,80,200,0.15);">Garage</button>
+      <button class="play-btn" id="lbBtn" style="background:linear-gradient(180deg,#cc44ff,#8822cc);color:#fff;box-shadow:0 4px 15px rgba(160,40,220,0.4),0 0 30px rgba(160,40,220,0.15);font-size:clamp(14px,2vw,20px);padding:14px 32px;">Leaderboard</button>
+    </div>
+    <div class="splash-hint">or press <kbd>Enter</kbd> to race</div>
+    <div class="splash-cars">
+      <div class="splash-car">&#x1F3CE;&#xFE0F;</div>
+      <div class="splash-car">&#x1F3CE;&#xFE0F;</div>
+      <div class="splash-car">&#x1F3CE;&#xFE0F;</div>
+    </div>
+  `;
+  overlay.style.display = 'flex';
+  document.getElementById('playBtn').addEventListener('click', () => startGame());
+  document.getElementById('garageBtn').addEventListener('click', () => showGarage());
+  document.getElementById('lbBtn').addEventListener('click', () => showLeaderboardScreen());
+}
+
+// Color palette for swatches
+const PALETTE = [
+  '#ff0000','#ff4400','#ff8800','#ffcc00','#ffff00','#88ff00','#00cc44',
+  '#00cccc','#0088ff','#4444ff','#8833ff','#cc33ff','#ff33aa','#ff6699',
+  '#ffffff','#cccccc','#888888','#444444','#222222','#000000',
+  '#cc6600','#885522','#ffaa88','#88ddff','#aaffaa','#ffaaff'
+];
+
+let garageEditIdx = -1; // -1 = creating new, >= 0 = editing existing
+
+function garageSwatches(key, current) {
+  return `<div class="garage-swatches" data-key="${key}">${PALETTE.map(c =>
+    `<div class="garage-swatch${c === current ? ' selected' : ''}" data-color="${c}" style="background:${c}"></div>`
+  ).join('')}</div>`;
+}
+
+function garageCarList() {
+  return garage.map((c, i) => `
+    <div class="garage-car-item${c.name === carConfig.name ? ' active' : ''}" data-idx="${i}">
+      <div class="swatch" style="background:${c.body}"></div>
+      <div class="car-name">${c.name}</div>
+      <div class="car-actions">
+        <span class="car-act-btn car-edit" data-editidx="${i}" title="Edit">edit</span>
+        <span class="car-act-btn car-del" data-delidx="${i}" title="Delete">&times;</span>
+      </div>
+    </div>
+  `).join('') || '<div style="color:#555;font-size:12px;padding:8px;">No saved cars yet</div>';
+}
+
+function showGarage() {
+  state = 'garage';
+  garageEditIdx = -1;
+  overlay.className = 'garage-screen';
+  overlay.innerHTML = `
+    <div class="splash-title" style="font-size:clamp(28px,5vw,52px);margin-bottom:4px;">Garage</div>
+    <div class="splash-divider"></div>
+    <div class="garage-wrap">
+      <div class="garage-preview-box">
+        <canvas id="garageCanvas" width="280" height="160"></canvas>
+        <div class="garage-preview-label">Preview</div>
+      </div>
+      <div class="garage-panel">
+        <div class="garage-section-label">Your Cars</div>
+        <div class="garage-saved" id="garageList">${garageCarList()}</div>
+        <div class="garage-section-label" id="garageEditorLabel">Create New</div>
+        <div class="garage-create-box" id="garageEditor">
+          <div class="garage-row"><label>Body</label>${garageSwatches('body', carConfig.body)}</div>
+          <div class="garage-row"><label>Cabin</label>${garageSwatches('cabin', carConfig.cabin)}</div>
+          <div class="garage-row"><label>Wheels</label>${garageSwatches('wheels', carConfig.wheels)}</div>
+          <div class="garage-row"><label>Lights</label>${garageSwatches('lights', carConfig.lights)}</div>
+          <div class="garage-row"><label>Flame</label>${garageSwatches('flame', carConfig.flame)}</div>
+          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+            <input class="garage-name-input" id="garageName" placeholder="Car name..." value="" maxlength="20">
+            <button class="garage-btn save" id="garageSave">Save New</button>
+          </div>
+          <div class="garage-error" id="garageError">A car with that name already exists!</div>
+        </div>
+        <div class="garage-btns">
+          <button class="garage-btn back" id="garageBack">Back</button>
+          <button class="garage-btn race" id="garageRace">Race This Car</button>
+        </div>
+      </div>
+    </div>
+  `;
+  overlay.style.display = 'flex';
+  wireGarage();
+}
+
+function wireGarage() {
+  const gc = document.getElementById('garageCanvas');
+  garagePreviewCtx = gc.getContext('2d');
+
+  // Swatch clicks
+  document.querySelectorAll('.garage-swatch').forEach(sw => {
+    sw.addEventListener('click', () => {
+      const key = sw.closest('.garage-swatches').dataset.key;
+      carConfig[key] = sw.dataset.color;
+      // Update selected state
+      sw.closest('.garage-swatches').querySelectorAll('.garage-swatch').forEach(s => s.classList.remove('selected'));
+      sw.classList.add('selected');
+      saveGarage();
+    });
+  });
+
+  // Save button
+  document.getElementById('garageSave').addEventListener('click', () => {
+    const nameInput = document.getElementById('garageName');
+    const name = nameInput.value.trim() || 'My Car';
+    const errEl = document.getElementById('garageError');
+
+    if (garageEditIdx >= 0) {
+      // Editing existing: allow same name only if it's the same car
+      const dupeIdx = garage.findIndex(c => c.name === name);
+      if (dupeIdx >= 0 && dupeIdx !== garageEditIdx) {
+        errEl.textContent = 'A car with that name already exists!';
+        errEl.style.display = 'block';
+        return;
+      }
+      carConfig.name = name;
+      garage[garageEditIdx] = { ...carConfig };
+      saveGarage();
+      garageEditIdx = -1;
+      showGarage();
+    } else {
+      // Creating new: block duplicate names
+      if (garage.some(c => c.name === name)) {
+        errEl.textContent = 'A car with that name already exists!';
+        errEl.style.display = 'block';
+        return;
+      }
+      carConfig.name = name;
+      garage.push({ ...carConfig });
+      saveGarage();
+      showGarage();
+    }
+  });
+
+  // Back button
+  document.getElementById('garageBack').addEventListener('click', () => showSplash());
+
+  // Race button
+  document.getElementById('garageRace').addEventListener('click', () => startGame());
+
+  wireGarageList();
+}
+
+function wireGarageList() {
+  // Car item click to select
+  document.querySelectorAll('.garage-car-item').forEach(el => {
+    el.addEventListener('click', (e) => {
+      if (e.target.classList.contains('car-del') || e.target.classList.contains('car-edit')) return;
+      const idx = parseInt(el.dataset.idx);
+      if (garage[idx]) {
+        Object.assign(carConfig, garage[idx]);
+        saveGarage();
+        // Just update active highlight without full refresh
+        document.querySelectorAll('.garage-car-item').forEach(item => item.classList.remove('active'));
+        el.classList.add('active');
+        // Reset editor to create mode
+        garageEditIdx = -1;
+        document.getElementById('garageEditorLabel').textContent = 'Create New';
+        document.getElementById('garageSave').textContent = 'Save New';
+        document.getElementById('garageName').value = '';
+        document.getElementById('garageError').style.display = 'none';
+        // Update swatch selections to match loaded car
+        updateSwatchSelections();
+      }
+    });
+  });
+  // Edit buttons
+  document.querySelectorAll('.car-edit').forEach(el => {
+    el.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const idx = parseInt(el.dataset.editidx);
+      if (garage[idx]) {
+        garageEditIdx = idx;
+        Object.assign(carConfig, garage[idx]);
+        saveGarage();
+        document.getElementById('garageEditorLabel').textContent = 'Editing: ' + garage[idx].name;
+        document.getElementById('garageSave').textContent = 'Save Changes';
+        document.getElementById('garageName').value = garage[idx].name;
+        document.getElementById('garageError').style.display = 'none';
+        // Update active highlight
+        document.querySelectorAll('.garage-car-item').forEach(item => item.classList.remove('active'));
+        el.closest('.garage-car-item').classList.add('active');
+        updateSwatchSelections();
+      }
+    });
+  });
+  // Delete buttons
+  document.querySelectorAll('.car-del').forEach(el => {
+    el.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const idx = parseInt(el.dataset.delidx);
+      garage.splice(idx, 1);
+      if (garageEditIdx === idx) garageEditIdx = -1;
+      else if (garageEditIdx > idx) garageEditIdx--;
+      saveGarage();
+      document.getElementById('garageList').innerHTML = garageCarList();
+      wireGarageList();
+    });
+  });
+}
+
+function updateSwatchSelections() {
+  ['body','cabin','wheels','lights','flame'].forEach(key => {
+    const container = document.querySelector(`.garage-swatches[data-key="${key}"]`);
+    if (!container) return;
+    container.querySelectorAll('.garage-swatch').forEach(s => {
+      s.classList.toggle('selected', s.dataset.color === carConfig[key]);
+    });
+  });
+}
+
+function drawGaragePreview() {
+  if (!garagePreviewCtx || state !== 'garage') return;
+  const c = garagePreviewCtx;
+  const pw = 280, ph = 160;
+  garageAnimFrame++;
+
+  c.clearRect(0, 0, pw, ph);
+
+  // Background - road strip
+  c.fillStyle = '#1a1a2e';
+  c.fillRect(0, 0, pw, ph);
+  const roadY = ph * 0.35, roadH = ph * 0.45;
+  const roadGrad = c.createLinearGradient(0, roadY, 0, roadY + roadH);
+  roadGrad.addColorStop(0, '#3a3a3a');
+  roadGrad.addColorStop(0.5, '#4a4a4a');
+  roadGrad.addColorStop(1, '#3a3a3a');
+  c.fillStyle = roadGrad;
+  c.fillRect(0, roadY, pw, roadH);
+  c.fillStyle = '#fff';
+  c.fillRect(0, roadY, pw, 2);
+  c.fillRect(0, roadY + roadH - 2, pw, 2);
+  // Animated stripes
+  c.setLineDash([12, 12]);
+  c.lineDashOffset = (garageAnimFrame * 2) % 24;
+  c.strokeStyle = 'rgba(255,255,255,0.3)';
+  c.lineWidth = 1;
+  c.beginPath(); c.moveTo(0, roadY + roadH / 2); c.lineTo(pw, roadY + roadH / 2); c.stroke();
+  c.setLineDash([]);
+
+  // Draw the car centered
+  const cx = pw / 2, cy = roadY + roadH / 2;
+  const cw = 100, ch = 50;
+
+  c.save();
+  c.translate(cx, cy);
+
+  // Shadow
+  c.fillStyle = 'rgba(0,0,0,0.35)';
+  c.beginPath();
+  c.ellipse(3, ch / 2 + 5, cw / 2, 10, 0, 0, Math.PI * 2);
+  c.fill();
+
+  // Body
+  c.fillStyle = carConfig.body;
+  previewRoundRect(c, -cw/2, -ch/2, cw, ch, 8);
+
+  // Cabin
+  c.fillStyle = carConfig.cabin;
+  previewRoundRect(c, -cw/4, -ch/2 + 5, cw/2.5, ch - 10, 4);
+
+  // Windshield
+  c.fillStyle = 'rgba(150,200,255,0.7)';
+  previewRoundRect(c, cw/5, -ch/2 + 7, cw/5, ch - 14, 3);
+
+  // Wheels
+  c.fillStyle = carConfig.wheels;
+  const whl = 13, whw = 8;
+  c.fillRect(-cw/2 + 4, -ch/2 - 3, whl, whw);
+  c.fillRect(-cw/2 + 4, ch/2 - whw + 3, whl, whw);
+  c.fillRect(cw/2 - whl - 4, -ch/2 - 3, whl, whw);
+  c.fillRect(cw/2 - whl - 4, ch/2 - whw + 3, whl, whw);
+  // Wheel rims
+  c.fillStyle = lightenColor(carConfig.wheels, 40);
+  c.fillRect(-cw/2 + 6, -ch/2 - 1, 4, 4);
+  c.fillRect(-cw/2 + 6, ch/2 - 3, 4, 4);
+  c.fillRect(cw/2 - whl - 2, -ch/2 - 1, 4, 4);
+  c.fillRect(cw/2 - whl - 2, ch/2 - 3, 4, 4);
+
+  // Headlights
+  c.fillStyle = carConfig.lights;
+  c.beginPath();
+  c.ellipse(cw/2, -ch/4, 5, 4, 0, 0, Math.PI * 2);
+  c.fill();
+  c.beginPath();
+  c.ellipse(cw/2, ch/4, 5, 4, 0, 0, Math.PI * 2);
+  c.fill();
+
+  // Light beams
+  const lightAlpha = 0.06 + Math.sin(garageAnimFrame * 0.05) * 0.02;
+  c.fillStyle = hexToRgba(carConfig.lights, lightAlpha);
+  c.beginPath();
+  c.moveTo(cw/2, -ch/3);
+  c.lineTo(cw/2 + 80, -ch);
+  c.lineTo(cw/2 + 80, ch);
+  c.lineTo(cw/2, ch/3);
+  c.fill();
+
+  // Exhaust flame (always on in preview)
+  const flameLen = 28 + Math.sin(garageAnimFrame * 0.3) * 10 + Math.random() * 5;
+  const fg = c.createLinearGradient(-cw/2, 0, -cw/2 - flameLen, 0);
+  fg.addColorStop(0, carConfig.flame);
+  fg.addColorStop(0.4, lightenColor(carConfig.flame, 60));
+  fg.addColorStop(1, hexToRgba(carConfig.flame, 0));
+  c.fillStyle = fg;
+  c.beginPath();
+  c.moveTo(-cw/2, -ch/4);
+  c.lineTo(-cw/2 - flameLen, Math.sin(garageAnimFrame * 0.4) * 3);
+  c.lineTo(-cw/2, ch/4);
+  c.fill();
+  // Inner flame
+  const fg2 = c.createLinearGradient(-cw/2, 0, -cw/2 - flameLen * 0.5, 0);
+  fg2.addColorStop(0, '#fff');
+  fg2.addColorStop(1, hexToRgba(carConfig.flame, 0));
+  c.fillStyle = fg2;
+  c.beginPath();
+  c.moveTo(-cw/2, -ch/6);
+  c.lineTo(-cw/2 - flameLen * 0.45, Math.sin(garageAnimFrame * 0.5) * 2);
+  c.lineTo(-cw/2, ch/6);
+  c.fill();
+
+  c.restore();
+}
+
+function previewRoundRect(c, x, y, w, h, r) {
+  c.beginPath();
+  c.moveTo(x + r, y);
+  c.lineTo(x + w - r, y);
+  c.quadraticCurveTo(x + w, y, x + w, y + r);
+  c.lineTo(x + w, y + h - r);
+  c.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+  c.lineTo(x + r, y + h);
+  c.quadraticCurveTo(x, y + h, x, y + h - r);
+  c.lineTo(x, y + r);
+  c.quadraticCurveTo(x, y, x + r, y);
+  c.closePath();
+  c.fill();
+}
+
+function hexToRgba(hex, alpha) {
+  const r = parseInt(hex.slice(1,3), 16), g = parseInt(hex.slice(3,5), 16), b = parseInt(hex.slice(5,7), 16);
+  return `rgba(${r},${g},${b},${alpha})`;
+}
+
+function lightenColor(hex, amt) {
+  let r = parseInt(hex.slice(1,3), 16), g = parseInt(hex.slice(3,5), 16), b = parseInt(hex.slice(5,7), 16);
+  r = Math.min(255, r + amt); g = Math.min(255, g + amt); b = Math.min(255, b + amt);
+  return '#' + [r,g,b].map(v => v.toString(16).padStart(2,'0')).join('');
+}
+
+// Wire initial splash buttons
+document.getElementById('garageBtn').addEventListener('click', () => showGarage());
+document.getElementById('lbBtn').addEventListener('click', () => showLeaderboardScreen());
+
+loop();
+</script>
+</body>
+</html>
