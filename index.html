@@ -412,6 +412,129 @@ window.addEventListener('keydown', e => { keys[e.code] = true; if (e.code === 'E
 window.addEventListener('keyup', e => keys[e.code] = false);
 document.getElementById('playBtn').addEventListener('click', () => { if (state !== 'playing') startGame(); });
 
+// Touch controls (iPad / mobile)
+const isTouchDevice = ('ontouchstart' in window) || navigator.maxTouchPoints > 0;
+const touch = { active: false, stickId: null, stickX: 0, stickY: 0, stickDx: 0, stickDy: 0, boostId: null, boostDown: false };
+const STICK_RADIUS = 60;
+const STICK_DEAD = 12;
+
+if (isTouchDevice) {
+  document.body.style.touchAction = 'none';
+
+  canvas.addEventListener('touchstart', e => {
+    if (state !== 'playing') return;
+    for (const t of e.changedTouches) {
+      // Right half = boost
+      if (t.clientX > W * 0.55 && touch.boostId === null) {
+        touch.boostId = t.identifier;
+        touch.boostDown = true;
+        keys['Space'] = true;
+      }
+      // Left half = joystick
+      else if (t.clientX <= W * 0.55 && touch.stickId === null) {
+        touch.stickId = t.identifier;
+        touch.active = true;
+        touch.stickX = t.clientX;
+        touch.stickY = t.clientY;
+        touch.stickDx = 0;
+        touch.stickDy = 0;
+      }
+    }
+    e.preventDefault();
+  }, { passive: false });
+
+  canvas.addEventListener('touchmove', e => {
+    for (const t of e.changedTouches) {
+      if (t.identifier === touch.stickId) {
+        let dx = t.clientX - touch.stickX;
+        let dy = t.clientY - touch.stickY;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist > STICK_RADIUS) { dx = dx / dist * STICK_RADIUS; dy = dy / dist * STICK_RADIUS; }
+        touch.stickDx = dx;
+        touch.stickDy = dy;
+        // Map joystick to keys
+        keys['ArrowRight'] = dx > STICK_DEAD;
+        keys['ArrowLeft'] = dx < -STICK_DEAD;
+        keys['ArrowUp'] = dy < -STICK_DEAD;
+        keys['ArrowDown'] = dy > STICK_DEAD;
+      }
+    }
+    e.preventDefault();
+  }, { passive: false });
+
+  const touchEnd = e => {
+    for (const t of e.changedTouches) {
+      if (t.identifier === touch.stickId) {
+        touch.stickId = null;
+        touch.active = false;
+        touch.stickDx = 0;
+        touch.stickDy = 0;
+        keys['ArrowRight'] = false;
+        keys['ArrowLeft'] = false;
+        keys['ArrowUp'] = false;
+        keys['ArrowDown'] = false;
+      }
+      if (t.identifier === touch.boostId) {
+        touch.boostId = null;
+        touch.boostDown = false;
+        keys['Space'] = false;
+      }
+    }
+  };
+  canvas.addEventListener('touchend', touchEnd);
+  canvas.addEventListener('touchcancel', touchEnd);
+}
+
+function drawTouchControls() {
+  if (!isTouchDevice || state !== 'playing') return;
+  // Joystick base (left side)
+  const baseX = 120, baseY = H - 130;
+  ctx.save();
+  ctx.globalAlpha = 0.2;
+  ctx.fillStyle = '#fff';
+  ctx.beginPath();
+  ctx.arc(baseX, baseY, STICK_RADIUS, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.globalAlpha = 0.35;
+  ctx.strokeStyle = '#fff';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.arc(baseX, baseY, STICK_RADIUS, 0, Math.PI * 2);
+  ctx.stroke();
+  // Joystick thumb
+  const thumbX = baseX + (touch.active ? touch.stickDx : 0);
+  const thumbY = baseY + (touch.active ? touch.stickDy : 0);
+  ctx.globalAlpha = 0.45;
+  ctx.fillStyle = '#fff';
+  ctx.beginPath();
+  ctx.arc(thumbX, thumbY, 26, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.restore();
+
+  // Boost button (right side)
+  const bx = W - 110, by = H - 130, br = 48;
+  ctx.save();
+  ctx.globalAlpha = touch.boostDown ? 0.4 : 0.2;
+  ctx.fillStyle = touch.boostDown ? '#ff8800' : '#fff';
+  ctx.beginPath();
+  ctx.arc(bx, by, br, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.globalAlpha = touch.boostDown ? 0.6 : 0.35;
+  ctx.strokeStyle = touch.boostDown ? '#ffcc00' : '#fff';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.arc(bx, by, br, 0, Math.PI * 2);
+  ctx.stroke();
+  // Label
+  ctx.globalAlpha = touch.boostDown ? 0.9 : 0.5;
+  ctx.fillStyle = '#fff';
+  ctx.font = "bold 14px 'Russo One', sans-serif";
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('BOOST', bx, by);
+  ctx.restore();
+}
+
 // Player car
 const player = { x: 0, y: 0, w: 80, h: 40, vy: 0, speed: 0, tilt: 0, boost: 0, trail: [] };
 
@@ -1073,6 +1196,7 @@ function draw() {
     speedEl.textContent = `SPEED: ${Math.floor(gameSpeed * 20)} km/h`;
     hiEl.textContent = `HI: ${hiScore.toLocaleString()}`;
     drawBoostMeter();
+    drawTouchControls();
   }
 }
 
