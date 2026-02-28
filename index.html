@@ -131,66 +131,101 @@
     background: radial-gradient(ellipse at 50% 30%, rgba(20,40,80,0.92) 0%, rgba(8,8,20,0.97) 100%);
   }
   .garage-wrap {
-    display: flex; gap: 24px; align-items: flex-start; justify-content: center;
-    flex-wrap: wrap; max-width: 900px; width: 92%;
+    display: flex; gap: 16px; align-items: stretch; justify-content: center;
+    max-width: 960px; width: 94%;
   }
+  /* Left column: car list */
+  .garage-list-col {
+    width: 160px; flex-shrink: 0; display: flex; flex-direction: column; gap: 6px;
+    max-height: 420px; overflow-y: auto; padding-right: 4px;
+  }
+  .garage-list-col::-webkit-scrollbar { width: 4px; }
+  .garage-list-col::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 2px; }
+  .garage-car-item {
+    display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 8px 6px;
+    background: rgba(255,255,255,0.04); border: 2px solid rgba(255,255,255,0.08);
+    border-radius: 10px; cursor: pointer; transition: background 0.15s, border-color 0.15s;
+  }
+  .garage-car-item:hover { background: rgba(255,255,255,0.1); }
+  .garage-car-item.active { border-color: #ffcc00; background: rgba(255,200,0,0.08); }
+  .garage-car-item canvas { border-radius: 6px; }
+  .garage-car-item .car-name {
+    font-family: 'Russo One', sans-serif; font-size: 11px; color: #ddd;
+    text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%;
+  }
+  .garage-car-item .car-del {
+    font-size: 12px; color: #664444; cursor: pointer; padding: 0 4px; border-radius: 4px;
+    transition: color 0.15s; position: absolute; top: 4px; right: 4px;
+  }
+  .garage-car-item .car-del:hover { color: #ff4444; }
+  .garage-car-item { position: relative; }
+  /* Middle column: editor */
+  .garage-editor-col {
+    flex: 1; min-width: 220px; display: flex; flex-direction: column; gap: 6px;
+  }
+  .garage-color-row {
+    display: flex; align-items: center; gap: 10px;
+    background: rgba(255,255,255,0.05); border-radius: 10px; padding: 8px 12px;
+  }
+  .garage-color-row label {
+    font-family: 'Russo One', sans-serif; font-size: 12px; color: #ccc;
+    min-width: 52px; text-transform: uppercase; letter-spacing: 1px;
+  }
+  .garage-color-current {
+    width: 32px; height: 32px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.25);
+    flex-shrink: 0;
+  }
+  .garage-color-edit {
+    font-family: 'Russo One', sans-serif; font-size: 11px; color: #aaa;
+    cursor: pointer; padding: 4px 10px; border-radius: 6px;
+    background: rgba(255,255,255,0.08); transition: background 0.15s, color 0.15s;
+    margin-left: auto; border: none;
+  }
+  .garage-color-edit:hover { background: rgba(255,255,255,0.18); color: #fff; }
+  /* Swatch popup */
+  .garage-swatch-popup {
+    display: none; position: absolute; left: 0; right: 0; top: 100%; margin-top: 4px;
+    background: rgba(15,15,30,0.97); border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 12px; padding: 10px; z-index: 10;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.6);
+  }
+  .garage-swatch-popup.open { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; }
+  .garage-color-row { position: relative; }
+  .garage-swatch {
+    width: 30px; height: 30px; border-radius: 50%; border: 3px solid transparent;
+    cursor: pointer; transition: transform 0.12s, border-color 0.12s; flex-shrink: 0;
+  }
+  .garage-swatch:hover { transform: scale(1.18); }
+  .garage-swatch.selected { border-color: #ffcc00; transform: scale(1.15); box-shadow: 0 0 8px rgba(255,200,0,0.5); }
+  .garage-name-input {
+    font-family: 'Russo One', sans-serif; font-size: 13px;
+    background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 8px; padding: 10px 14px; color: #fff; width: 100%;
+    outline: none; box-sizing: border-box;
+  }
+  .garage-name-input::placeholder { color: #555; }
+  .garage-name-input:focus { border-color: #ffcc00; }
+  .garage-error {
+    font-family: 'Russo One', sans-serif; font-size: 11px; color: #ff6666;
+    display: none; margin-top: -2px;
+  }
+  .garage-section-label {
+    font-family: 'Russo One', sans-serif; font-size: 11px; color: #555;
+    letter-spacing: 2px; text-transform: uppercase; margin-top: 2px;
+  }
+  /* Right column: preview */
   .garage-preview-box {
     background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1);
     border-radius: 16px; padding: 16px; display: flex; flex-direction: column; align-items: center;
+    align-self: flex-start;
   }
   .garage-preview-box canvas { border-radius: 10px; }
   .garage-preview-label {
     font-family: 'Russo One', sans-serif; font-size: 12px; color: #888;
     margin-top: 8px; letter-spacing: 2px; text-transform: uppercase;
   }
-  .garage-panel {
-    flex: 1; min-width: 280px; display: flex; flex-direction: column; gap: 8px;
-  }
-  .garage-row {
-    display: flex; align-items: center; gap: 8px;
-    background: rgba(255,255,255,0.05); border-radius: 10px; padding: 6px 12px;
-  }
-  .garage-row label {
-    font-family: 'Russo One', sans-serif; font-size: 12px; color: #ccc;
-    min-width: 56px; text-transform: uppercase; letter-spacing: 1px;
-  }
-  .garage-swatches { display: flex; gap: 5px; flex-wrap: wrap; }
-  .garage-swatch {
-    width: 28px; height: 28px; border-radius: 50%; border: 3px solid transparent;
-    cursor: pointer; transition: transform 0.12s, border-color 0.12s; flex-shrink: 0;
-  }
-  .garage-swatch:hover { transform: scale(1.15); }
-  .garage-swatch.selected { border-color: #ffcc00; transform: scale(1.12); box-shadow: 0 0 8px rgba(255,200,0,0.5); }
-  .garage-saved {
-    margin-top: 4px; max-height: 180px; overflow-y: auto;
-    display: flex; flex-direction: column; gap: 4px;
-  }
-  .garage-saved::-webkit-scrollbar { width: 4px; }
-  .garage-saved::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 2px; }
-  .garage-car-item {
-    display: flex; align-items: center; gap: 10px; padding: 8px 12px;
-    background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 8px; cursor: pointer; transition: background 0.15s;
-  }
-  .garage-car-item:hover { background: rgba(255,255,255,0.1); }
-  .garage-car-item.active { border-color: #ffcc00; background: rgba(255,200,0,0.08); }
-  .garage-car-item .swatch {
-    width: 24px; height: 24px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.2); flex-shrink: 0;
-  }
-  .garage-car-item .car-name {
-    font-family: 'Russo One', sans-serif; font-size: 13px; color: #ddd; flex: 1;
-  }
-  .garage-car-item .car-actions { display: flex; gap: 4px; }
-  .garage-car-item .car-act-btn {
-    font-size: 12px; cursor: pointer; padding: 2px 6px; border-radius: 4px;
-    transition: color 0.15s; font-family: 'Russo One', sans-serif;
-  }
-  .garage-car-item .car-edit { color: #5588bb; }
-  .garage-car-item .car-edit:hover { color: #66bbff; }
-  .garage-car-item .car-del { color: #664444; }
-  .garage-car-item .car-del:hover { color: #ff4444; }
   .garage-btns {
-    display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap; justify-content: center;
+    display: flex; gap: 10px; margin-top: 6px; flex-wrap: wrap; justify-content: center;
   }
   .garage-btn {
     font-family: 'Russo One', sans-serif; font-size: 13px; padding: 10px 22px;
@@ -202,26 +237,6 @@
   .garage-btn.save { background: linear-gradient(180deg, #44cc66, #228844); color: #fff; }
   .garage-btn.back { background: linear-gradient(180deg, #666, #444); color: #fff; }
   .garage-btn.race { background: linear-gradient(180deg, #ff8800, #cc5500); color: #fff; box-shadow: 0 4px 15px rgba(200,80,0,0.4); }
-  .garage-name-input {
-    font-family: 'Russo One', sans-serif; font-size: 13px;
-    background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.2);
-    border-radius: 8px; padding: 10px 14px; color: #fff; flex: 1; min-width: 120px;
-    outline: none;
-  }
-  .garage-name-input::placeholder { color: #555; }
-  .garage-name-input:focus { border-color: #ffcc00; }
-  .garage-section-label {
-    font-family: 'Russo One', sans-serif; font-size: 11px; color: #555;
-    letter-spacing: 2px; text-transform: uppercase; margin-top: 6px;
-  }
-  .garage-create-box {
-    background: rgba(255,255,255,0.03); border: 1px dashed rgba(255,255,255,0.15);
-    border-radius: 10px; padding: 12px; display: flex; flex-direction: column; gap: 8px;
-  }
-  .garage-error {
-    font-family: 'Russo One', sans-serif; font-size: 11px; color: #ff6666;
-    display: none; margin-top: 2px;
-  }
 
   /* Leaderboard */
   .lb-table {
@@ -1141,61 +1156,101 @@ const PALETTE = [
 
 let garageEditIdx = -1; // -1 = creating new, >= 0 = editing existing
 
-function garageSwatches(key, current) {
-  return `<div class="garage-swatches" data-key="${key}">${PALETTE.map(c =>
+function drawMiniCar(canvas, cfg) {
+  const c = canvas.getContext('2d');
+  const pw = canvas.width, ph = canvas.height;
+  c.clearRect(0, 0, pw, ph);
+  c.fillStyle = '#1a1a2e';
+  c.fillRect(0, 0, pw, ph);
+  // Mini road
+  const roadY = ph * 0.4, roadH = ph * 0.4;
+  c.fillStyle = '#333';
+  c.fillRect(0, roadY, pw, roadH);
+  // Car
+  const cx = pw / 2, cy = roadY + roadH / 2;
+  const cw = 44, ch = 22;
+  c.save();
+  c.translate(cx, cy);
+  c.fillStyle = cfg.body;
+  c.beginPath(); c.roundRect(-cw/2, -ch/2, cw, ch, 4); c.fill();
+  c.fillStyle = cfg.cabin;
+  c.beginPath(); c.roundRect(-cw/4, -ch/2 + 3, cw/2.5, ch - 6, 2); c.fill();
+  c.fillStyle = cfg.wheels;
+  c.fillRect(-cw/2 + 2, -ch/2 - 2, 7, 5);
+  c.fillRect(-cw/2 + 2, ch/2 - 3, 7, 5);
+  c.fillRect(cw/2 - 9, -ch/2 - 2, 7, 5);
+  c.fillRect(cw/2 - 9, ch/2 - 3, 7, 5);
+  c.fillStyle = cfg.lights;
+  c.beginPath(); c.ellipse(cw/2, -ch/4, 3, 2, 0, 0, Math.PI * 2); c.fill();
+  c.beginPath(); c.ellipse(cw/2, ch/4, 3, 2, 0, 0, Math.PI * 2); c.fill();
+  c.restore();
+}
+
+function garageSwatchPopup(key, current) {
+  return `<div class="garage-swatch-popup" id="popup_${key}" data-key="${key}">${PALETTE.map(c =>
     `<div class="garage-swatch${c === current ? ' selected' : ''}" data-color="${c}" style="background:${c}"></div>`
   ).join('')}</div>`;
 }
 
 function garageCarList() {
+  if (garage.length === 0) return '<div style="color:#555;font-size:12px;padding:8px;text-align:center;">No saved cars</div>';
   return garage.map((c, i) => `
     <div class="garage-car-item${c.name === carConfig.name ? ' active' : ''}" data-idx="${i}">
-      <div class="swatch" style="background:${c.body}"></div>
+      <div class="car-del" data-delidx="${i}" title="Delete">&times;</div>
+      <canvas width="120" height="60" data-thumb="${i}"></canvas>
       <div class="car-name">${c.name}</div>
-      <div class="car-actions">
-        <span class="car-act-btn car-edit" data-editidx="${i}" title="Edit">edit</span>
-        <span class="car-act-btn car-del" data-delidx="${i}" title="Delete">&times;</span>
-      </div>
     </div>
-  `).join('') || '<div style="color:#555;font-size:12px;padding:8px;">No saved cars yet</div>';
+  `).join('');
+}
+
+function drawAllThumbs() {
+  document.querySelectorAll('canvas[data-thumb]').forEach(canvas => {
+    const idx = parseInt(canvas.dataset.thumb);
+    if (garage[idx]) drawMiniCar(canvas, garage[idx]);
+  });
 }
 
 function showGarage() {
   state = 'garage';
   garageEditIdx = -1;
   overlay.className = 'garage-screen';
+  const isEditing = garage.some(c => c.name === carConfig.name);
+  const editingIdx = garage.findIndex(c => c.name === carConfig.name);
+  if (isEditing) garageEditIdx = editingIdx;
   overlay.innerHTML = `
     <div class="splash-title" style="font-size:clamp(28px,5vw,52px);margin-bottom:4px;">Garage</div>
     <div class="splash-divider"></div>
     <div class="garage-wrap">
-      <div class="garage-preview-box">
-        <canvas id="garageCanvas" width="280" height="160"></canvas>
-        <div class="garage-preview-label">Preview</div>
+      <div class="garage-list-col" id="garageList">
+        <div class="garage-section-label" style="text-align:center;margin-bottom:2px;">Your Cars</div>
+        ${garageCarList()}
       </div>
-      <div class="garage-panel">
-        <div class="garage-section-label">Your Cars</div>
-        <div class="garage-saved" id="garageList">${garageCarList()}</div>
-        <div class="garage-section-label" id="garageEditorLabel">Create New</div>
-        <div class="garage-create-box" id="garageEditor">
-          <div class="garage-row"><label>Body</label>${garageSwatches('body', carConfig.body)}</div>
-          <div class="garage-row"><label>Cabin</label>${garageSwatches('cabin', carConfig.cabin)}</div>
-          <div class="garage-row"><label>Wheels</label>${garageSwatches('wheels', carConfig.wheels)}</div>
-          <div class="garage-row"><label>Lights</label>${garageSwatches('lights', carConfig.lights)}</div>
-          <div class="garage-row"><label>Flame</label>${garageSwatches('flame', carConfig.flame)}</div>
-          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
-            <input class="garage-name-input" id="garageName" placeholder="Car name..." value="" maxlength="20">
-            <button class="garage-btn save" id="garageSave">Save New</button>
+      <div class="garage-editor-col">
+        <div class="garage-section-label" id="garageEditorLabel">${isEditing ? 'Editing: ' + carConfig.name : 'New Car'}</div>
+        ${['body','cabin','wheels','lights','flame'].map(key => `
+          <div class="garage-color-row" data-rowkey="${key}">
+            <label>${key}</label>
+            <div class="garage-color-current" style="background:${carConfig[key]}"></div>
+            <button class="garage-color-edit" data-editkey="${key}">&#9998;</button>
+            ${garageSwatchPopup(key, carConfig[key])}
           </div>
-          <div class="garage-error" id="garageError">A car with that name already exists!</div>
-        </div>
+        `).join('')}
+        <input class="garage-name-input" id="garageName" placeholder="Car name..." value="${isEditing ? carConfig.name : ''}" maxlength="20">
+        <div class="garage-error" id="garageError"></div>
+        <button class="garage-btn save" id="garageSave" style="width:100%;">${isEditing ? 'Save Changes' : 'Save New Car'}</button>
         <div class="garage-btns">
           <button class="garage-btn back" id="garageBack">Back</button>
           <button class="garage-btn race" id="garageRace">Race This Car</button>
         </div>
       </div>
+      <div class="garage-preview-box">
+        <canvas id="garageCanvas" width="280" height="160"></canvas>
+        <div class="garage-preview-label">Preview</div>
+      </div>
     </div>
   `;
   overlay.style.display = 'flex';
+  drawAllThumbs();
   wireGarage();
 }
 
@@ -1203,14 +1258,41 @@ function wireGarage() {
   const gc = document.getElementById('garageCanvas');
   garagePreviewCtx = gc.getContext('2d');
 
-  // Swatch clicks
+  // Pencil edit buttons toggle popups
+  document.querySelectorAll('.garage-color-edit').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const key = btn.dataset.editkey;
+      const popup = document.getElementById('popup_' + key);
+      const wasOpen = popup.classList.contains('open');
+      // Close all popups first
+      document.querySelectorAll('.garage-swatch-popup').forEach(p => p.classList.remove('open'));
+      if (!wasOpen) popup.classList.add('open');
+    });
+  });
+
+  // Close popups on outside click
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('.garage-color-row')) {
+      document.querySelectorAll('.garage-swatch-popup').forEach(p => p.classList.remove('open'));
+    }
+  }, { once: false });
+
+  // Swatch clicks inside popups
   document.querySelectorAll('.garage-swatch').forEach(sw => {
-    sw.addEventListener('click', () => {
-      const key = sw.closest('.garage-swatches').dataset.key;
+    sw.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const popup = sw.closest('.garage-swatch-popup');
+      const key = popup.dataset.key;
       carConfig[key] = sw.dataset.color;
-      // Update selected state
-      sw.closest('.garage-swatches').querySelectorAll('.garage-swatch').forEach(s => s.classList.remove('selected'));
+      // Update selected
+      popup.querySelectorAll('.garage-swatch').forEach(s => s.classList.remove('selected'));
       sw.classList.add('selected');
+      // Update the color circle
+      const row = popup.closest('.garage-color-row');
+      row.querySelector('.garage-color-current').style.background = sw.dataset.color;
+      // Close popup
+      popup.classList.remove('open');
       saveGarage();
     });
   });
@@ -1220,24 +1302,24 @@ function wireGarage() {
     const nameInput = document.getElementById('garageName');
     const name = nameInput.value.trim() || 'My Car';
     const errEl = document.getElementById('garageError');
+    errEl.style.display = 'none';
 
     if (garageEditIdx >= 0) {
       // Editing existing: allow same name only if it's the same car
       const dupeIdx = garage.findIndex(c => c.name === name);
       if (dupeIdx >= 0 && dupeIdx !== garageEditIdx) {
-        errEl.textContent = 'A car with that name already exists!';
+        errEl.textContent = 'That name is taken!';
         errEl.style.display = 'block';
         return;
       }
       carConfig.name = name;
       garage[garageEditIdx] = { ...carConfig };
       saveGarage();
-      garageEditIdx = -1;
       showGarage();
     } else {
       // Creating new: block duplicate names
       if (garage.some(c => c.name === name)) {
-        errEl.textContent = 'A car with that name already exists!';
+        errEl.textContent = 'That name is taken!';
         errEl.style.display = 'block';
         return;
       }
@@ -1258,45 +1340,16 @@ function wireGarage() {
 }
 
 function wireGarageList() {
-  // Car item click to select
+  // Car item click to select & load into editor
   document.querySelectorAll('.garage-car-item').forEach(el => {
     el.addEventListener('click', (e) => {
-      if (e.target.classList.contains('car-del') || e.target.classList.contains('car-edit')) return;
+      if (e.target.classList.contains('car-del')) return;
       const idx = parseInt(el.dataset.idx);
       if (garage[idx]) {
         Object.assign(carConfig, garage[idx]);
-        saveGarage();
-        // Just update active highlight without full refresh
-        document.querySelectorAll('.garage-car-item').forEach(item => item.classList.remove('active'));
-        el.classList.add('active');
-        // Reset editor to create mode
-        garageEditIdx = -1;
-        document.getElementById('garageEditorLabel').textContent = 'Create New';
-        document.getElementById('garageSave').textContent = 'Save New';
-        document.getElementById('garageName').value = '';
-        document.getElementById('garageError').style.display = 'none';
-        // Update swatch selections to match loaded car
-        updateSwatchSelections();
-      }
-    });
-  });
-  // Edit buttons
-  document.querySelectorAll('.car-edit').forEach(el => {
-    el.addEventListener('click', (e) => {
-      e.stopPropagation();
-      const idx = parseInt(el.dataset.editidx);
-      if (garage[idx]) {
         garageEditIdx = idx;
-        Object.assign(carConfig, garage[idx]);
         saveGarage();
-        document.getElementById('garageEditorLabel').textContent = 'Editing: ' + garage[idx].name;
-        document.getElementById('garageSave').textContent = 'Save Changes';
-        document.getElementById('garageName').value = garage[idx].name;
-        document.getElementById('garageError').style.display = 'none';
-        // Update active highlight
-        document.querySelectorAll('.garage-car-item').forEach(item => item.classList.remove('active'));
-        el.closest('.garage-car-item').classList.add('active');
-        updateSwatchSelections();
+        showGarage();
       }
     });
   });
@@ -1309,18 +1362,7 @@ function wireGarageList() {
       if (garageEditIdx === idx) garageEditIdx = -1;
       else if (garageEditIdx > idx) garageEditIdx--;
       saveGarage();
-      document.getElementById('garageList').innerHTML = garageCarList();
-      wireGarageList();
-    });
-  });
-}
-
-function updateSwatchSelections() {
-  ['body','cabin','wheels','lights','flame'].forEach(key => {
-    const container = document.querySelector(`.garage-swatches[data-key="${key}"]`);
-    if (!container) return;
-    container.querySelectorAll('.garage-swatch').forEach(s => {
-      s.classList.toggle('selected', s.dataset.color === carConfig[key]);
+      showGarage();
     });
   });
 }
