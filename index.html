@@ -159,6 +159,13 @@
   }
   .garage-car-item .car-del:hover { color: #ff4444; }
   .garage-car-item { position: relative; }
+  .garage-new-car {
+    display: flex; align-items: center; justify-content: center; gap: 6px; padding: 10px 6px;
+    background: rgba(255,255,255,0.04); border: 2px dashed rgba(255,255,255,0.15);
+    border-radius: 10px; cursor: pointer; transition: background 0.15s, border-color 0.15s;
+    font-family: 'Russo One', sans-serif; font-size: 12px; color: #aaa;
+  }
+  .garage-new-car:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.3); color: #fff; }
   /* Middle column: editor */
   .garage-editor-col {
     flex: 1; min-width: 220px; display: flex; flex-direction: column; gap: 6px;
@@ -173,15 +180,9 @@
   }
   .garage-color-current {
     width: 32px; height: 32px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.25);
-    flex-shrink: 0;
+    flex-shrink: 0; cursor: pointer; transition: transform 0.15s, border-color 0.15s;
   }
-  .garage-color-edit {
-    font-family: 'Russo One', sans-serif; font-size: 11px; color: #aaa;
-    cursor: pointer; padding: 4px 10px; border-radius: 6px;
-    background: rgba(255,255,255,0.08); transition: background 0.15s, color 0.15s;
-    margin-left: auto; border: none;
-  }
-  .garage-color-edit:hover { background: rgba(255,255,255,0.18); color: #fff; }
+  .garage-color-current:hover { transform: scale(1.15); border-color: #ffcc00; }
   /* Swatch popup */
   .garage-swatch-popup {
     display: none; position: absolute; left: 0; right: 0; top: 100%; margin-top: 4px;
@@ -576,7 +577,7 @@ function createScenery(x) {
   const top = Math.random() < 0.5;
   return {
     x,
-    y: top ? ROAD_TOP() - 30 - Math.random() * 100 : ROAD_BOT() + 20 + Math.random() * 80,
+    y: top ? ROAD_TOP() + 2 - Math.random() * 22 : ROAD_BOT() + 20 + Math.random() * 80,
     type: ['tree', 'rock', 'bush', 'cactus'][Math.floor(Math.random() * 4)],
     size: 15 + Math.random() * 25,
     top
@@ -585,7 +586,7 @@ function createScenery(x) {
 
 function difficulty() {
   // Returns 0..1 representing how far into the difficulty curve we are
-  return Math.min(1, score / 50000);
+  return Math.min(1, score / 41667);
 }
 
 function createObstacle() {
@@ -597,10 +598,9 @@ function createObstacle() {
   // Y position: random across the full road height, not snapped to lanes
   const y = roadTop + Math.random() * (roadBot - roadTop);
 
-  const types = ['car_red', 'car_blue', 'car_green', 'truck', 'cone'];
+  const types = ['car_red', 'car_blue', 'car_green', 'truck'];
   const type = types[Math.floor(Math.random() * types.length)];
   const isTruck = type === 'truck';
-  const isCone = type === 'cone';
 
   // Swerve gets more common and aggressive with difficulty
   const swerveChance = 0.15 + d * 0.45; // 15% -> 60%
@@ -611,14 +611,14 @@ function createObstacle() {
   }
 
   // Obstacle speed increases with difficulty
-  const baseSpeed = isCone ? 0 : 1 + Math.random() * 2;
-  const speedBonus = isCone ? 0 : d * 2; // cars get faster over time
+  const baseSpeed = 1 + Math.random() * 2;
+  const speedBonus = d * 2; // cars get faster over time
 
   return {
     x: W + 100 + Math.random() * 80, // slight x variation so groups don't form a wall
     y,
-    w: isTruck ? 100 : isCone ? 20 : 70,
-    h: isTruck ? 45 : isCone ? 20 : 35,
+    w: isTruck ? 100 : 70,
+    h: isTruck ? 45 : 35,
     type,
     speed: baseSpeed + speedBonus,
     swerve
@@ -929,8 +929,8 @@ function update() {
   // Difficulty ramp - gradual across all dimensions
   const d = difficulty();
   maxSpeed = 12 + d * 6;           // top speed increases
-  const baseSpawn = 70 - d * 40;   // frames between spawns: 70 -> 30
-  const spawnRate = Math.max(15, baseSpawn - gameSpeed * 1.5);
+  const baseSpawn = 58 - d * 34;   // frames between spawns: 58 -> 24
+  const spawnRate = Math.max(12, baseSpawn - gameSpeed * 1.8);
 
   // Boost regen slows slightly with difficulty
   player.boost = Math.min(100, player.boost + (0.06 - d * 0.02));
@@ -1147,8 +1147,6 @@ function draw() {
   for (const o of obstacles) {
     if (o.type === 'truck') {
       drawTruck(o.x, o.y);
-    } else if (o.type === 'cone') {
-      drawCone(o.x, o.y);
     } else {
       const colors = {
         car_red: ['#cc2222', '#991111'],
@@ -1347,6 +1345,7 @@ function showGarage() {
     <div class="garage-wrap">
       <div class="garage-list-col" id="garageList">
         <div class="garage-section-label" style="text-align:center;margin-bottom:2px;">Your Cars</div>
+        <div class="garage-new-car" id="garageNewCar">+ New Car</div>
         ${garageCarList()}
       </div>
       <div class="garage-editor-col">
@@ -1354,8 +1353,7 @@ function showGarage() {
         ${['body','cabin','wheels','lights','flame'].map(key => `
           <div class="garage-color-row" data-rowkey="${key}">
             <label>${key}</label>
-            <div class="garage-color-current" style="background:${carConfig[key]}"></div>
-            <button class="garage-color-edit" data-editkey="${key}">&#9998;</button>
+            <div class="garage-color-current" style="background:${carConfig[key]}" data-editkey="${key}"></div>
             ${garageSwatchPopup(key, carConfig[key])}
           </div>
         `).join('')}
@@ -1382,8 +1380,8 @@ function wireGarage() {
   const gc = document.getElementById('garageCanvas');
   garagePreviewCtx = gc.getContext('2d');
 
-  // Pencil edit buttons toggle popups
-  document.querySelectorAll('.garage-color-edit').forEach(btn => {
+  // Color tile clicks toggle popups
+  document.querySelectorAll('.garage-color-current').forEach(btn => {
     btn.addEventListener('click', (e) => {
       e.stopPropagation();
       const key = btn.dataset.editkey;
@@ -1452,6 +1450,13 @@ function wireGarage() {
       saveGarage();
       showGarage();
     }
+  });
+
+  // New car button
+  document.getElementById('garageNewCar').addEventListener('click', () => {
+    Object.assign(carConfig, { ...defaultCarConfig });
+    garageEditIdx = -1;
+    showGarage();
   });
 
   // Back button
