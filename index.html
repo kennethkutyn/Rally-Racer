@@ -6,6 +6,10 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bungee+Shade&family=Russo+One&display=swap" rel="stylesheet">
+<script src="https://cdn.amplitude.com/script/320039b4a4d9514044b5ded10958c124.js"></script>
+<script>
+  window.amplitude.init('320039b4a4d9514044b5ded10958c124', { autocapture: false });
+</script>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body { background: #111; display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; font-family: 'Courier New', monospace; }
@@ -327,6 +331,13 @@
 </div>
 
 <script>
+// ---- Amplitude Analytics ----
+const amp = window.amplitude;
+function trackEvent(name, props) { amp.track(name, props); }
+function trackPageView(page) { trackEvent('page_view', { page }); }
+function trackButtonClick(button, page) { trackEvent('button_click', { button, page }); }
+trackPageView('menu');
+
 const canvas = document.getElementById('c');
 const ctx = canvas.getContext('2d');
 const overlay = document.getElementById('overlay');
@@ -411,7 +422,7 @@ loadLeaderboard();
 const keys = {};
 window.addEventListener('keydown', e => { keys[e.code] = true; if (e.code === 'Enter' && state !== 'playing' && state !== 'garage' && !document.getElementById('lbNameInput')) startGame(); });
 window.addEventListener('keyup', e => keys[e.code] = false);
-document.getElementById('playBtn').addEventListener('click', () => { if (state !== 'playing') startGame(); });
+document.getElementById('playBtn').addEventListener('click', () => { trackButtonClick('play_now', 'menu'); if (state !== 'playing') startGame(); });
 
 // Touch controls (iPad / mobile)
 const isTouchDevice = ('ontouchstart' in window) || navigator.maxTouchPoints > 0;
@@ -550,6 +561,8 @@ const LANES = 4;
 let obstacles = [], scenery = [], particles = [], sparks = [];
 
 function startGame() {
+  trackEvent('race_start', { car: carConfig.name || 'Stock Orange' });
+  trackPageView('race');
   state = 'playing';
   score = 0;
   gameSpeed = 3;
@@ -991,6 +1004,8 @@ function update() {
 }
 
 function die(obstacle) {
+  trackEvent('race_end', { score, high_score: hiScore, is_new_record: score >= hiScore && score > 0 });
+  trackPageView('death_screen');
   state = 'dead';
   spawnParticles(player.x, player.y, 30, '#ff4400');
   spawnParticles(player.x, player.y, 20, '#ffcc00');
@@ -1022,6 +1037,9 @@ function die(obstacle) {
       const nameInput = document.getElementById('lbNameInput');
       const submitName = () => {
         const name = nameInput.value.trim() || 'Anonymous';
+        if (name !== 'Anonymous') { amp.setUserId(name); }
+        trackButtonClick('submit_score', 'death_screen');
+        trackEvent('score_submitted', { name, score });
         addToLeaderboard(name, score);
         showDeathLeaderboard(isNewRecord, score);
       };
@@ -1053,8 +1071,8 @@ function showDeathLeaderboard(isNewRecord, highlightScore) {
     <div class="splash-hint">or press <kbd>Enter</kbd> to race</div>
   `;
   overlay.style.display = 'flex';
-  document.getElementById('retryBtn').addEventListener('click', () => { if (state !== 'playing') startGame(); });
-  document.getElementById('deathGarageBtn').addEventListener('click', () => showGarage());
+  document.getElementById('retryBtn').addEventListener('click', () => { trackButtonClick('race_again', 'death_screen'); if (state !== 'playing') startGame(); });
+  document.getElementById('deathGarageBtn').addEventListener('click', () => { trackButtonClick('garage', 'death_screen'); showGarage(); });
 }
 
 function drawBackground() {
@@ -1220,6 +1238,7 @@ function loop() {
 
 // ---- Leaderboard screen (from splash) ----
 async function showLeaderboardScreen() {
+  trackPageView('leaderboard');
   await loadLeaderboard();
   state = 'menu';
   overlay.className = 'menu-screen';
@@ -1230,7 +1249,7 @@ async function showLeaderboardScreen() {
     <button class="play-btn" id="lbBackBtn" style="margin-top:20px;background:linear-gradient(180deg,#666,#444);color:#fff;box-shadow:none;font-size:clamp(14px,2vw,20px);padding:12px 36px;">Back</button>
   `;
   overlay.style.display = 'flex';
-  document.getElementById('lbBackBtn').addEventListener('click', () => showSplash());
+  document.getElementById('lbBackBtn').addEventListener('click', () => { trackButtonClick('back', 'leaderboard'); showSplash(); });
 }
 
 // ---- Garage system ----
@@ -1238,6 +1257,7 @@ let garagePreviewCtx = null;
 let garageAnimFrame = 0;
 
 function showSplash() {
+  trackPageView('menu');
   state = 'menu';
   overlay.className = 'menu-screen';
   overlay.innerHTML = `
@@ -1263,9 +1283,9 @@ function showSplash() {
     </div>
   `;
   overlay.style.display = 'flex';
-  document.getElementById('playBtn').addEventListener('click', () => startGame());
-  document.getElementById('garageBtn').addEventListener('click', () => showGarage());
-  document.getElementById('lbBtn').addEventListener('click', () => showLeaderboardScreen());
+  document.getElementById('playBtn').addEventListener('click', () => { trackButtonClick('play_now', 'menu'); startGame(); });
+  document.getElementById('garageBtn').addEventListener('click', () => { trackButtonClick('garage', 'menu'); showGarage(); });
+  document.getElementById('lbBtn').addEventListener('click', () => { trackButtonClick('leaderboard', 'menu'); showLeaderboardScreen(); });
 }
 
 // Color palette for swatches
@@ -1333,6 +1353,7 @@ function drawAllThumbs() {
 }
 
 function showGarage() {
+  trackPageView('garage');
   state = 'garage';
   garageEditIdx = -1;
   overlay.className = 'garage-screen';
@@ -1421,6 +1442,7 @@ function wireGarage() {
 
   // Save button
   document.getElementById('garageSave').addEventListener('click', () => {
+    trackButtonClick('save_car', 'garage');
     const nameInput = document.getElementById('garageName');
     const name = nameInput.value.trim() || 'My Car';
     const errEl = document.getElementById('garageError');
@@ -1454,16 +1476,17 @@ function wireGarage() {
 
   // New car button
   document.getElementById('garageNewCar').addEventListener('click', () => {
+    trackButtonClick('new_car', 'garage');
     Object.assign(carConfig, { ...defaultCarConfig });
     garageEditIdx = -1;
     showGarage();
   });
 
   // Back button
-  document.getElementById('garageBack').addEventListener('click', () => showSplash());
+  document.getElementById('garageBack').addEventListener('click', () => { trackButtonClick('back', 'garage'); showSplash(); });
 
   // Race button
-  document.getElementById('garageRace').addEventListener('click', () => startGame());
+  document.getElementById('garageRace').addEventListener('click', () => { trackButtonClick('race_this_car', 'garage'); startGame(); });
 
   wireGarageList();
 }
@@ -1636,8 +1659,8 @@ function lightenColor(hex, amt) {
 }
 
 // Wire initial splash buttons
-document.getElementById('garageBtn').addEventListener('click', () => showGarage());
-document.getElementById('lbBtn').addEventListener('click', () => showLeaderboardScreen());
+document.getElementById('garageBtn').addEventListener('click', () => { trackButtonClick('garage', 'menu'); showGarage(); });
+document.getElementById('lbBtn').addEventListener('click', () => { trackButtonClick('leaderboard', 'menu'); showLeaderboardScreen(); });
 
 loop();
 </script>
