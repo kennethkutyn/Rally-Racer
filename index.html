@@ -305,7 +305,7 @@
 <div id="ui">
   <div id="score">SCORE: 0</div>
   <div id="speed">SPEED: 0 km/h</div>
-  <div id="hi">HI: 0</div>
+  <div id="hi">HIGH SCORE: 0</div>
 </div>
 <div id="overlay" class="menu-screen">
   <div class="splash-title">Rally Racer</div>
@@ -1004,7 +1004,7 @@ function update() {
 }
 
 function die(obstacle) {
-  trackEvent('race_end', { score, high_score: hiScore, is_new_record: score >= hiScore && score > 0 });
+  trackEvent('race_end', { score, is_new_record: score >= hiScore && score > 0 });
   trackPageView('death_screen');
   state = 'dead';
   spawnParticles(player.x, player.y, 30, '#ff4400');
@@ -1210,7 +1210,7 @@ function draw() {
   if (state === 'playing') {
     scoreEl.textContent = `SCORE: ${score.toLocaleString()}`;
     speedEl.textContent = `SPEED: ${Math.floor(gameSpeed * 20)} km/h`;
-    hiEl.textContent = `HI: ${hiScore.toLocaleString()}`;
+    hiEl.textContent = `High Score: ${hiScore.toLocaleString()}`;
     drawBoostMeter();
     drawTouchControls();
   }
