@@ -1,0 +1,529 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		15969650BD57123EAB863205 /* GameConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D13EA1A2BE3D4C20043BB1 /* GameConstants.swift */; };
+		18CB481908112245D9C7BCEE /* LeaderboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 550280A26F99BF993E78D18B /* LeaderboardView.swift */; };
+		22C8B09A7D0C08A4BFD4CB15 /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CF0CFC9406A32C887E4ACF8 /* GameScene.swift */; };
+		36F41A2633572A7878B84791 /* SceneryNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4729D9E45762C49A25EF50F /* SceneryNode.swift */; };
+		3A30DE78C76C23C31B081DFA /* RallyRacerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A00728246182B3E3A9DD75D /* RallyRacerApp.swift */; };
+		47D8AE6CE625C270D27A4902 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BECDB9D19FFA47D2B5DAD677 /* ContentView.swift */; };
+		51F0A4336745D62717D35A3F /* TouchControlNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7492B3EBB5D31CDA4B22F35 /* TouchControlNode.swift */; };
+		52C279986A53DE64421E5FB2 /* ColorSwatchGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0440C938A20D0F2A8968381 /* ColorSwatchGrid.swift */; };
+		60CE0AB7B0BDC2C23E75434B /* FirebaseService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73C2C912293411DEFB0A2CE1 /* FirebaseService.swift */; };
+		62CCC283997676C72D79C6C9 /* GarageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D957B0455CD9CD109653E75 /* GarageView.swift */; };
+		66B6F4C524D04071F03FD7C4 /* RussoOne-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4D12F44AC7737F8F3AA6F456 /* RussoOne-Regular.ttf */; };
+		69A67D8DC1889420BE26FE5C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F3F325B47F0C4CE6AAB4A408 /* Assets.xcassets */; };
+		844FA95D2DF6BFAB9ED100FB /* MainMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 036FA4B32A40BCB208CB8FA3 /* MainMenuView.swift */; };
+		8B7F985FDDEA6115ADA69A7C /* GarageStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5BD21EC6270B7D93F08F9E3 /* GarageStorage.swift */; };
+		9385E1DC2F4DED5B39CF500C /* BackgroundNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A4909B8B622CA3286AFCF08 /* BackgroundNode.swift */; };
+		99D5FC35D5EEA55FA3F2A45C /* AnalyticsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24BF8DBBE723D40EC333ACE8 /* AnalyticsService.swift */; };
+		BCE1A0DD45ECBF705FAB6EBA /* RoadNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEBF92DDFC957809F40D03A5 /* RoadNode.swift */; };
+		BE0FFEAD6A2492AA8D0C33C1 /* GradientTexture.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7944AB950CDEA4553D9A5D8 /* GradientTexture.swift */; };
+		C7843635BBAB66BC91C2EED0 /* ColorExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E07F1963DBE5D9DB48E24B27 /* ColorExtensions.swift */; };
+		D23D0449F57039B9658E2B34 /* GaragePreviewScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = B777D6132D4DF72E4CC74C3E /* GaragePreviewScene.swift */; };
+		DA1353CDB6D4C0675EFC99C6 /* DeathScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5081248C893C641F8BA7CD8 /* DeathScreenView.swift */; };
+		E0078CDD1B47879F919B6D9A /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = A525F62EDC2F18B78BC525D5 /* AppState.swift */; };
+		E4ABF5E351D15905A0687ABE /* HUDNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = D89551F95263EA9BD1E75A0B /* HUDNode.swift */; };
+		E4ACAFA2938F28186982BACB /* ColorPalette.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C7ABC347989C5BA39059305 /* ColorPalette.swift */; };
+		F0862EC83439798E1E152C0D /* ObstacleNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = B01B240D9301B81A80F28045 /* ObstacleNode.swift */; };
+		F2DE3F6537971BF01CF3A87D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EBE249BB6C7DCD00CB0BAEF9 /* Foundation.framework */; };
+		FA277863B94D97120D27A0B6 /* PlayerNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3625594A678D894FDBC490F /* PlayerNode.swift */; };
+		FAED404CED466B51A7959D9A /* BungeeShade-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 04B94E385C1C27FF62C8F4A4 /* BungeeShade-Regular.ttf */; };
+		FF643DD66533CA72D6EA0560 /* CarConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB7B48403F99DA39A876E771 /* CarConfig.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		036FA4B32A40BCB208CB8FA3 /* MainMenuView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MainMenuView.swift; sourceTree = "<group>"; };
+		04B94E385C1C27FF62C8F4A4 /* BungeeShade-Regular.ttf */ = {isa = PBXFileReference; includeInIndex = 1; path = "BungeeShade-Regular.ttf"; sourceTree = "<group>"; };
+		2286E2018AEA908FA3221B3F /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		24BF8DBBE723D40EC333ACE8 /* AnalyticsService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AnalyticsService.swift; sourceTree = "<group>"; };
+		2A00728246182B3E3A9DD75D /* RallyRacerApp.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = RallyRacerApp.swift; sourceTree = "<group>"; };
+		4D12F44AC7737F8F3AA6F456 /* RussoOne-Regular.ttf */ = {isa = PBXFileReference; includeInIndex = 1; path = "RussoOne-Regular.ttf"; sourceTree = "<group>"; };
+		550280A26F99BF993E78D18B /* LeaderboardView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = LeaderboardView.swift; sourceTree = "<group>"; };
+		73C2C912293411DEFB0A2CE1 /* FirebaseService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FirebaseService.swift; sourceTree = "<group>"; };
+		7D957B0455CD9CD109653E75 /* GarageView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = GarageView.swift; sourceTree = "<group>"; };
+		8C7ABC347989C5BA39059305 /* ColorPalette.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ColorPalette.swift; sourceTree = "<group>"; };
+		8CF0CFC9406A32C887E4ACF8 /* GameScene.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = GameScene.swift; sourceTree = "<group>"; };
+		9A4909B8B622CA3286AFCF08 /* BackgroundNode.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = BackgroundNode.swift; sourceTree = "<group>"; };
+		A525F62EDC2F18B78BC525D5 /* AppState.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
+		A7944AB950CDEA4553D9A5D8 /* GradientTexture.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = GradientTexture.swift; sourceTree = "<group>"; };
+		B01B240D9301B81A80F28045 /* ObstacleNode.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ObstacleNode.swift; sourceTree = "<group>"; };
+		B777D6132D4DF72E4CC74C3E /* GaragePreviewScene.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = GaragePreviewScene.swift; sourceTree = "<group>"; };
+		BEBF92DDFC957809F40D03A5 /* RoadNode.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = RoadNode.swift; sourceTree = "<group>"; };
+		BECDB9D19FFA47D2B5DAD677 /* ContentView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		D5BD21EC6270B7D93F08F9E3 /* GarageStorage.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = GarageStorage.swift; sourceTree = "<group>"; };
+		D7492B3EBB5D31CDA4B22F35 /* TouchControlNode.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TouchControlNode.swift; sourceTree = "<group>"; };
+		D89551F95263EA9BD1E75A0B /* HUDNode.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HUDNode.swift; sourceTree = "<group>"; };
+		D93709CFA4F07CE733BABC24 /* RallyRacer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RallyRacer.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		DB7B48403F99DA39A876E771 /* CarConfig.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CarConfig.swift; sourceTree = "<group>"; };
+		E0440C938A20D0F2A8968381 /* ColorSwatchGrid.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ColorSwatchGrid.swift; sourceTree = "<group>"; };
+		E07F1963DBE5D9DB48E24B27 /* ColorExtensions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ColorExtensions.swift; sourceTree = "<group>"; };
+		E3625594A678D894FDBC490F /* PlayerNode.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PlayerNode.swift; sourceTree = "<group>"; };
+		EBE249BB6C7DCD00CB0BAEF9 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS18.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
+		F3F325B47F0C4CE6AAB4A408 /* Assets.xcassets */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		F4729D9E45762C49A25EF50F /* SceneryNode.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SceneryNode.swift; sourceTree = "<group>"; };
+		F5081248C893C641F8BA7CD8 /* DeathScreenView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DeathScreenView.swift; sourceTree = "<group>"; };
+		F7D13EA1A2BE3D4C20043BB1 /* GameConstants.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = GameConstants.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		0610F7DA6F5621AB330E16ED /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F2DE3F6537971BF01CF3A87D /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		1587E5759E6844E4F2A9EC49 = {
+			isa = PBXGroup;
+			children = (
+				822D36F35053E07DE43BCA34 /* Products */,
+				CD9C17389C51BEFD42A7EB22 /* Frameworks */,
+				5F943277F61A6FFB09054EEE /* RallyRacer */,
+			);
+			sourceTree = "<group>";
+		};
+		3784501188B09E2CEAA60757 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				73C2C912293411DEFB0A2CE1 /* FirebaseService.swift */,
+				24BF8DBBE723D40EC333ACE8 /* AnalyticsService.swift */,
+				D5BD21EC6270B7D93F08F9E3 /* GarageStorage.swift */,
+			);
+			name = Services;
+			path = Services;
+			sourceTree = "<group>";
+		};
+		56B20C0BCDABDA4A3ADF4980 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				F3F325B47F0C4CE6AAB4A408 /* Assets.xcassets */,
+				A07A74D430076E668015A62D /* Fonts */,
+			);
+			name = Resources;
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		5C944B7BAF79A4E739B99B9A /* iOS */ = {
+			isa = PBXGroup;
+			children = (
+				EBE249BB6C7DCD00CB0BAEF9 /* Foundation.framework */,
+			);
+			name = iOS;
+			sourceTree = "<group>";
+		};
+		5F943277F61A6FFB09054EEE /* RallyRacer */ = {
+			isa = PBXGroup;
+			children = (
+				C57545E26F4CDD3D150A8FD5 /* Models */,
+				DF07B8AC2561CDA3D005531C /* Game */,
+				FC41D9DA9B0605CF2E101A61 /* Views */,
+				3784501188B09E2CEAA60757 /* Services */,
+				6736BB9AD87F6DED79120D4B /* Utilities */,
+				56B20C0BCDABDA4A3ADF4980 /* Resources */,
+				2A00728246182B3E3A9DD75D /* RallyRacerApp.swift */,
+				A525F62EDC2F18B78BC525D5 /* AppState.swift */,
+				2286E2018AEA908FA3221B3F /* Info.plist */,
+			);
+			name = RallyRacer;
+			path = RallyRacer;
+			sourceTree = "<group>";
+		};
+		6736BB9AD87F6DED79120D4B /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				E07F1963DBE5D9DB48E24B27 /* ColorExtensions.swift */,
+				A7944AB950CDEA4553D9A5D8 /* GradientTexture.swift */,
+			);
+			name = Utilities;
+			path = Utilities;
+			sourceTree = "<group>";
+		};
+		822D36F35053E07DE43BCA34 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				D93709CFA4F07CE733BABC24 /* RallyRacer.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		A07A74D430076E668015A62D /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				04B94E385C1C27FF62C8F4A4 /* BungeeShade-Regular.ttf */,
+				4D12F44AC7737F8F3AA6F456 /* RussoOne-Regular.ttf */,
+			);
+			name = Fonts;
+			path = Fonts;
+			sourceTree = "<group>";
+		};
+		C57545E26F4CDD3D150A8FD5 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				DB7B48403F99DA39A876E771 /* CarConfig.swift */,
+				F7D13EA1A2BE3D4C20043BB1 /* GameConstants.swift */,
+				8C7ABC347989C5BA39059305 /* ColorPalette.swift */,
+			);
+			name = Models;
+			path = Models;
+			sourceTree = "<group>";
+		};
+		CD9C17389C51BEFD42A7EB22 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				5C944B7BAF79A4E739B99B9A /* iOS */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		DF07B8AC2561CDA3D005531C /* Game */ = {
+			isa = PBXGroup;
+			children = (
+				8CF0CFC9406A32C887E4ACF8 /* GameScene.swift */,
+				9A4909B8B622CA3286AFCF08 /* BackgroundNode.swift */,
+				BEBF92DDFC957809F40D03A5 /* RoadNode.swift */,
+				E3625594A678D894FDBC490F /* PlayerNode.swift */,
+				B01B240D9301B81A80F28045 /* ObstacleNode.swift */,
+				F4729D9E45762C49A25EF50F /* SceneryNode.swift */,
+				D89551F95263EA9BD1E75A0B /* HUDNode.swift */,
+				D7492B3EBB5D31CDA4B22F35 /* TouchControlNode.swift */,
+			);
+			name = Game;
+			path = Game;
+			sourceTree = "<group>";
+		};
+		FC41D9DA9B0605CF2E101A61 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				BECDB9D19FFA47D2B5DAD677 /* ContentView.swift */,
+				036FA4B32A40BCB208CB8FA3 /* MainMenuView.swift */,
+				F5081248C893C641F8BA7CD8 /* DeathScreenView.swift */,
+				7D957B0455CD9CD109653E75 /* GarageView.swift */,
+				B777D6132D4DF72E4CC74C3E /* GaragePreviewScene.swift */,
+				550280A26F99BF993E78D18B /* LeaderboardView.swift */,
+				E0440C938A20D0F2A8968381 /* ColorSwatchGrid.swift */,
+			);
+			name = Views;
+			path = Views;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		ED3BB797E0824D6B3DDCDC81 /* RallyRacer */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E46187A648325CC10C476EFE /* Build configuration list for PBXNativeTarget "RallyRacer" */;
+			buildPhases = (
+				5ED685A2561575B31EBBB457 /* Sources */,
+				0610F7DA6F5621AB330E16ED /* Frameworks */,
+				F0F201F94624EB8EC5B15A5E /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = RallyRacer;
+			packageProductDependencies = (
+				6E22363BA121684F763F6682 /* AmplitudeSwift */,
+			);
+			productName = RallyRacer;
+			productReference = D93709CFA4F07CE733BABC24 /* RallyRacer.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		1E5A1D3B920B74DB7C800C02 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 1600;
+				LastUpgradeCheck = 1600;
+			};
+			buildConfigurationList = DA11EDC083131FC919348608 /* Build configuration list for PBXProject "RallyRacer" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 1587E5759E6844E4F2A9EC49;
+			minimizedProjectReferenceProxies = 0;
+			packageReferences = (
+				2253D3F7E3E963514E981826 /* XCRemoteSwiftPackageReference "Amplitude-Swift" */,
+			);
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 822D36F35053E07DE43BCA34 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				ED3BB797E0824D6B3DDCDC81 /* RallyRacer */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		F0F201F94624EB8EC5B15A5E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				69A67D8DC1889420BE26FE5C /* Assets.xcassets in Resources */,
+				FAED404CED466B51A7959D9A /* BungeeShade-Regular.ttf in Resources */,
+				66B6F4C524D04071F03FD7C4 /* RussoOne-Regular.ttf in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		5ED685A2561575B31EBBB457 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3A30DE78C76C23C31B081DFA /* RallyRacerApp.swift in Sources */,
+				E0078CDD1B47879F919B6D9A /* AppState.swift in Sources */,
+				FF643DD66533CA72D6EA0560 /* CarConfig.swift in Sources */,
+				15969650BD57123EAB863205 /* GameConstants.swift in Sources */,
+				E4ACAFA2938F28186982BACB /* ColorPalette.swift in Sources */,
+				22C8B09A7D0C08A4BFD4CB15 /* GameScene.swift in Sources */,
+				9385E1DC2F4DED5B39CF500C /* BackgroundNode.swift in Sources */,
+				BCE1A0DD45ECBF705FAB6EBA /* RoadNode.swift in Sources */,
+				FA277863B94D97120D27A0B6 /* PlayerNode.swift in Sources */,
+				F0862EC83439798E1E152C0D /* ObstacleNode.swift in Sources */,
+				36F41A2633572A7878B84791 /* SceneryNode.swift in Sources */,
+				E4ABF5E351D15905A0687ABE /* HUDNode.swift in Sources */,
+				51F0A4336745D62717D35A3F /* TouchControlNode.swift in Sources */,
+				47D8AE6CE625C270D27A4902 /* ContentView.swift in Sources */,
+				844FA95D2DF6BFAB9ED100FB /* MainMenuView.swift in Sources */,
+				DA1353CDB6D4C0675EFC99C6 /* DeathScreenView.swift in Sources */,
+				62CCC283997676C72D79C6C9 /* GarageView.swift in Sources */,
+				D23D0449F57039B9658E2B34 /* GaragePreviewScene.swift in Sources */,
+				18CB481908112245D9C7BCEE /* LeaderboardView.swift in Sources */,
+				52C279986A53DE64421E5FB2 /* ColorSwatchGrid.swift in Sources */,
+				60CE0AB7B0BDC2C23E75434B /* FirebaseService.swift in Sources */,
+				99D5FC35D5EEA55FA3F2A45C /* AnalyticsService.swift in Sources */,
+				8B7F985FDDEA6115ADA69A7C /* GarageStorage.swift in Sources */,
+				C7843635BBAB66BC91C2EED0 /* ColorExtensions.swift in Sources */,
+				BE0FFEAD6A2492AA8D0C33C1 /* GradientTexture.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		4BE88539489647122BECF70C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		87F0726BA28B1A49272E9784 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = RallyRacer/Info.plist;
+				INFOPLIST_KEY_UIRequiresFullScreen = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.kenkutyn.RallyRacer;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		DDEE2F00D5A4BDB639306C87 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = RallyRacer/Info.plist;
+				INFOPLIST_KEY_UIRequiresFullScreen = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.kenkutyn.RallyRacer;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		E7F0253B59C76C9B6250B9BF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		DA11EDC083131FC919348608 /* Build configuration list for PBXProject "RallyRacer" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E7F0253B59C76C9B6250B9BF /* Debug */,
+				4BE88539489647122BECF70C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		E46187A648325CC10C476EFE /* Build configuration list for PBXNativeTarget "RallyRacer" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DDEE2F00D5A4BDB639306C87 /* Release */,
+				87F0726BA28B1A49272E9784 /* Debug */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		2253D3F7E3E963514E981826 /* XCRemoteSwiftPackageReference "Amplitude-Swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/amplitude/Amplitude-Swift.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		6E22363BA121684F763F6682 /* AmplitudeSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2253D3F7E3E963514E981826 /* XCRemoteSwiftPackageReference "Amplitude-Swift" */;
+			productName = AmplitudeSwift;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 1E5A1D3B920B74DB7C800C02 /* Project object */;
+}

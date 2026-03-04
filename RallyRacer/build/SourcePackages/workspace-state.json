@@ -1,0 +1,64 @@
+{
+  "object" : {
+    "artifacts" : [
+
+    ],
+    "dependencies" : [
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "amplitude-swift",
+          "kind" : "remoteSourceControl",
+          "location" : "https://github.com/amplitude/Amplitude-Swift.git",
+          "name" : "Amplitude-Swift"
+        },
+        "state" : {
+          "checkoutState" : {
+            "revision" : "b9da4c5e28830375dccdd9b49cc62da60b7f1895",
+            "version" : "1.17.3"
+          },
+          "name" : "sourceControlCheckout"
+        },
+        "subpath" : "Amplitude-Swift"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "amplitudecore-swift",
+          "kind" : "remoteSourceControl",
+          "location" : "https://github.com/amplitude/AmplitudeCore-Swift.git",
+          "name" : "AmplitudeCore-Swift"
+        },
+        "state" : {
+          "checkoutState" : {
+            "revision" : "1be727864d2e7ead7198f975ffc30cf5a7ba6fd3",
+            "version" : "1.4.3"
+          },
+          "name" : "sourceControlCheckout"
+        },
+        "subpath" : "AmplitudeCore-Swift"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "analytics-connector-ios",
+          "kind" : "remoteSourceControl",
+          "location" : "https://github.com/amplitude/analytics-connector-ios.git",
+          "name" : "analytics-connector-ios"
+        },
+        "state" : {
+          "checkoutState" : {
+            "revision" : "4adbfe85486e6dcdcdca5fa9362097ffe5ec712b",
+            "version" : "1.3.1"
+          },
+          "name" : "sourceControlCheckout"
+        },
+        "subpath" : "analytics-connector-ios"
+      }
+    ],
+    "prebuilts" : [
+
+    ]
+  },
+  "version" : 7
+}
