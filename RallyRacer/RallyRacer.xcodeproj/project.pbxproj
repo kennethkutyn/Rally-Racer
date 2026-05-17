@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 46;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -40,11 +40,11 @@
 
 /* Begin PBXFileReference section */
 		036FA4B32A40BCB208CB8FA3 /* MainMenuView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MainMenuView.swift; sourceTree = "<group>"; };
-		04B94E385C1C27FF62C8F4A4 /* BungeeShade-Regular.ttf */ = {isa = PBXFileReference; includeInIndex = 1; path = "BungeeShade-Regular.ttf"; sourceTree = "<group>"; };
+		04B94E385C1C27FF62C8F4A4 /* BungeeShade-Regular.ttf */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = file; path = "BungeeShade-Regular.ttf"; sourceTree = "<group>"; };
 		2286E2018AEA908FA3221B3F /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		24BF8DBBE723D40EC333ACE8 /* AnalyticsService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AnalyticsService.swift; sourceTree = "<group>"; };
 		2A00728246182B3E3A9DD75D /* RallyRacerApp.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = RallyRacerApp.swift; sourceTree = "<group>"; };
-		4D12F44AC7737F8F3AA6F456 /* RussoOne-Regular.ttf */ = {isa = PBXFileReference; includeInIndex = 1; path = "RussoOne-Regular.ttf"; sourceTree = "<group>"; };
+		4D12F44AC7737F8F3AA6F456 /* RussoOne-Regular.ttf */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = file; path = "RussoOne-Regular.ttf"; sourceTree = "<group>"; };
 		550280A26F99BF993E78D18B /* LeaderboardView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = LeaderboardView.swift; sourceTree = "<group>"; };
 		73C2C912293411DEFB0A2CE1 /* FirebaseService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FirebaseService.swift; sourceTree = "<group>"; };
 		7D957B0455CD9CD109653E75 /* GarageView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = GarageView.swift; sourceTree = "<group>"; };
@@ -100,7 +100,6 @@
 				24BF8DBBE723D40EC333ACE8 /* AnalyticsService.swift */,
 				D5BD21EC6270B7D93F08F9E3 /* GarageStorage.swift */,
 			);
-			name = Services;
 			path = Services;
 			sourceTree = "<group>";
 		};
@@ -110,7 +109,6 @@
 				F3F325B47F0C4CE6AAB4A408 /* Assets.xcassets */,
 				A07A74D430076E668015A62D /* Fonts */,
 			);
-			name = Resources;
 			path = Resources;
 			sourceTree = "<group>";
 		};
@@ -135,7 +133,6 @@
 				A525F62EDC2F18B78BC525D5 /* AppState.swift */,
 				2286E2018AEA908FA3221B3F /* Info.plist */,
 			);
-			name = RallyRacer;
 			path = RallyRacer;
 			sourceTree = "<group>";
 		};
@@ -145,7 +142,6 @@
 				E07F1963DBE5D9DB48E24B27 /* ColorExtensions.swift */,
 				A7944AB950CDEA4553D9A5D8 /* GradientTexture.swift */,
 			);
-			name = Utilities;
 			path = Utilities;
 			sourceTree = "<group>";
 		};
@@ -163,7 +159,6 @@
 				04B94E385C1C27FF62C8F4A4 /* BungeeShade-Regular.ttf */,
 				4D12F44AC7737F8F3AA6F456 /* RussoOne-Regular.ttf */,
 			);
-			name = Fonts;
 			path = Fonts;
 			sourceTree = "<group>";
 		};
@@ -174,7 +169,6 @@
 				F7D13EA1A2BE3D4C20043BB1 /* GameConstants.swift */,
 				8C7ABC347989C5BA39059305 /* ColorPalette.swift */,
 			);
-			name = Models;
 			path = Models;
 			sourceTree = "<group>";
 		};
@@ -198,7 +192,6 @@
 				D89551F95263EA9BD1E75A0B /* HUDNode.swift */,
 				D7492B3EBB5D31CDA4B22F35 /* TouchControlNode.swift */,
 			);
-			name = Game;
 			path = Game;
 			sourceTree = "<group>";
 		};
@@ -213,7 +206,6 @@
 				550280A26F99BF993E78D18B /* LeaderboardView.swift */,
 				E0440C938A20D0F2A8968381 /* ColorSwatchGrid.swift */,
 			);
-			name = Views;
 			path = Views;
 			sourceTree = "<group>";
 		};
@@ -234,7 +226,6 @@
 			);
 			name = RallyRacer;
 			packageProductDependencies = (
-				6E22363BA121684F763F6682 /* AmplitudeSwift */,
 			);
 			productName = RallyRacer;
 			productReference = D93709CFA4F07CE733BABC24 /* RallyRacer.app */;
@@ -258,11 +249,8 @@
 				Base,
 			);
 			mainGroup = 1587E5759E6844E4F2A9EC49;
-			minimizedProjectReferenceProxies = 0;
 			packageReferences = (
-				2253D3F7E3E963514E981826 /* XCRemoteSwiftPackageReference "Amplitude-Swift" */,
 			);
-			preferredProjectObjectVersion = 77;
 			productRefGroup = 822D36F35053E07DE43BCA34 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -383,13 +371,17 @@
 				CLANG_ENABLE_OBJC_WEAK = NO;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = Z6535457SP;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = RallyRacer/Info.plist;
 				INFOPLIST_KEY_UIRequiresFullScreen = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.kenkutyn.RallyRacer;
 				SDKROOT = iphoneos;
@@ -406,13 +398,17 @@
 				CLANG_ENABLE_OBJC_WEAK = NO;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = Z6535457SP;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = RallyRacer/Info.plist;
 				INFOPLIST_KEY_UIRequiresFullScreen = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.kenkutyn.RallyRacer;
 				SDKROOT = iphoneos;
@@ -507,22 +503,9 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		2253D3F7E3E963514E981826 /* XCRemoteSwiftPackageReference "Amplitude-Swift" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/amplitude/Amplitude-Swift.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.0.0;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		6E22363BA121684F763F6682 /* AmplitudeSwift */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 2253D3F7E3E963514E981826 /* XCRemoteSwiftPackageReference "Amplitude-Swift" */;
-			productName = AmplitudeSwift;
-		};
 /* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 1E5A1D3B920B74DB7C800C02 /* Project object */;

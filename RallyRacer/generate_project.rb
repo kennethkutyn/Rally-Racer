@@ -72,18 +72,18 @@ end
 # Swift Package Manager Dependencies
 # ============================================================
 
-# --- Amplitude-Swift ---
-amplitude_pkg = project.new(Xcodeproj::Project::Object::XCRemoteSwiftPackageReference)
-amplitude_pkg.repositoryURL = 'https://github.com/amplitude/Amplitude-Swift.git'
-amplitude_pkg.requirement = { 'kind' => 'upToNextMajorVersion', 'minimumVersion' => '1.0.0' }
-project.root_object.package_references << amplitude_pkg
-
-amplitude_dep = project.new(Xcodeproj::Project::Object::XCSwiftPackageProductDependency)
-amplitude_dep.product_name = 'AmplitudeSwift'
-amplitude_dep.package = amplitude_pkg
-target.package_product_dependencies << amplitude_dep
+# --- Amplitude-Swift --- TEMPORARILY REMOVED
+# amplitude_pkg = project.new(Xcodeproj::Project::Object::XCRemoteSwiftPackageReference)
+# amplitude_pkg.repositoryURL = 'https://github.com/amplitude/Amplitude-Swift.git'
+# amplitude_pkg.requirement = { 'kind' => 'upToNextMajorVersion', 'minimumVersion' => '1.0.0' }
+# project.root_object.package_references << amplitude_pkg
+#
+# amplitude_dep = project.new(Xcodeproj::Project::Object::XCSwiftPackageProductDependency)
+# amplitude_dep.product_name = 'AmplitudeSwift'
+# amplitude_dep.package = amplitude_pkg
+# target.package_product_dependencies << amplitude_dep
 
 project.save
 
-puts "Project generated at #{project_path} with SPM: Amplitude-Swift"
+puts "Project generated at #{project_path} (Amplitude-Swift temporarily removed)"
 puts "Firebase uses live REST API (same as web version, no SDK needed)"

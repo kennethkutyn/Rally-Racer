@@ -1,27 +1,28 @@
 import Foundation
 import UIKit
-import AmplitudeSwift
+// import AmplitudeSwift // TEMPORARILY REMOVED
 
 class AnalyticsService {
     static let shared = AnalyticsService()
 
-    private var amplitude: Amplitude?
+    // private var amplitude: Amplitude? // TEMPORARILY REMOVED
 
     private init() {}
 
     func configure() {
-        amplitude = Amplitude(configuration: Configuration(
-            apiKey: "320039b4a4d9514044b5ded10958c124",
-            autocapture: []
-        ))
+        // TEMPORARILY REMOVED - Amplitude SDK
+        // amplitude = Amplitude(configuration: Configuration(
+        //     apiKey: "320039b4a4d9514044b5ded10958c124",
+        //     autocapture: []
+        // ))
 
         let deviceType = UIDevice.current.userInterfaceIdiom == .pad ? "ipad" : "iphone"
-        let identify = Identify()
-        identify.set(property: "Device Type", value: deviceType)
-        amplitude?.identify(identify: identify)
+        // let identify = Identify()
+        // identify.set(property: "Device Type", value: deviceType)
+        // amplitude?.identify(identify: identify)
 
         #if DEBUG
-        print("[Analytics] Amplitude configured, Device Type: \(deviceType)")
+        print("[Analytics] Amplitude DISABLED, Device Type: \(deviceType)")
         #endif
     }
 
@@ -34,11 +35,12 @@ class AnalyticsService {
         }
         #endif
 
-        if let props = properties {
-            amplitude?.track(eventType: eventName, eventProperties: props)
-        } else {
-            amplitude?.track(eventType: eventName)
-        }
+        // TEMPORARILY REMOVED - Amplitude SDK
+        // if let props = properties {
+        //     amplitude?.track(eventType: eventName, eventProperties: props)
+        // } else {
+        //     amplitude?.track(eventType: eventName)
+        // }
     }
 
     func trackPageView(_ page: String) {
@@ -50,7 +52,7 @@ class AnalyticsService {
     }
 
     func setUserId(_ userId: String) {
-        amplitude?.setUserId(userId: userId)
+        // amplitude?.setUserId(userId: userId) // TEMPORARILY REMOVED
         #if DEBUG
         print("[Analytics] setUserId: \(userId)")
         #endif
