@@ -6,7 +6,7 @@ class FirebaseService {
     private let baseURL = "https://rally-racer-d5dab-default-rtdb.asia-southeast1.firebasedatabase.app"
 
     func loadLeaderboard() async -> [LeaderboardEntry] {
-        guard let url = URL(string: "\(baseURL)/leaderboard.json?orderBy=\"score\"&limitToLast=10") else { return [] }
+        guard let url = URL(string: "\(baseURL)/leaderboard.json") else { return [] }
         do {
             let (data, _) = try await URLSession.shared.data(from: url)
             guard let dict = try JSONSerialization.jsonObject(with: data) as? [String: [String: Any]] else {

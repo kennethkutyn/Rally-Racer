@@ -21,14 +21,14 @@ enum GameConstants {
     }
 
     // MARK: - Speed
-    static let startSpeed: CGFloat = 3
+    static let startSpeed: CGFloat = 4
     static let baseMaxSpeed: CGFloat = 12
     static let difficultyMaxSpeedBonus: CGFloat = 6
-    static let boostSpeedAdd: CGFloat = 4
+    static let boostSpeedAdd: CGFloat = 5
     static let accelerationRate: CGFloat = 0.08
     static let brakeRate: CGFloat = 0.12
     static let coastDeceleration: CGFloat = 0.01
-    static let minCoastSpeed: CGFloat = 2
+    static let minCoastSpeed: CGFloat = 3
     static let minBrakeSpeed: CGFloat = 1
     static let boostSpeedIncrement: CGFloat = 0.3
 
