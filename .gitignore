@@ -1,0 +1,18 @@
+# Xcode build artifacts
+RallyRacer/build/
+DerivedData/
+
+# Xcode user state
+*.xcuserstate
+*.xcuserdatad/
+
+# SPM
+.swiftpm/
+.build/
+
+# macOS
+.DS_Store
+**/.DS_Store
+
+# Generated
+*.ipa
