@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rally Racer 2000 - Retro Side-Scroll Racing</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bungee+Shade&family=Russo+One&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #0a0514;
+    color: #ccc;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-size: 16px;
+    line-height: 1.7;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  .hero {
+    background: radial-gradient(ellipse at 60% 40%, #501444 0%, #0a0514 70%);
+    padding: 80px 20px 60px;
+    text-align: center;
+    position: relative;
+  }
+
+  .hero::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(to right, transparent, #ff6600, #ffcc00, #ff6600, transparent);
+  }
+
+  .hero h1 {
+    font-family: 'Bungee Shade', cursive;
+    font-size: clamp(36px, 8vw, 72px);
+    color: #ff4444;
+    text-shadow: 4px 4px 0 #000, 0 0 60px rgba(255, 60, 20, 0.5);
+    margin-bottom: 12px;
+  }
+
+  .hero .subtitle {
+    font-family: 'Russo One', sans-serif;
+    font-size: clamp(14px, 3vw, 22px);
+    color: #ffcc00;
+    text-shadow: 2px 2px 0 #000;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    margin-bottom: 32px;
+  }
+
+  .hero .tagline {
+    font-size: 18px;
+    color: #aaa;
+    max-width: 500px;
+    margin: 0 auto 36px;
+  }
+
+  .container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 24px 80px;
+  }
+
+  .features {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+    padding: 50px 0;
+  }
+
+  .feature {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    padding: 28px 24px;
+    text-align: center;
+    transition: border-color 0.2s;
+  }
+
+  .feature:hover { border-color: rgba(255, 102, 0, 0.3); }
+
+  .feature-icon {
+    font-size: 40px;
+    margin-bottom: 14px;
+    display: block;
+  }
+
+  .feature h3 {
+    font-family: 'Russo One', sans-serif;
+    color: #ffcc00;
+    font-size: 16px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .feature p {
+    font-size: 14px;
+    color: #999;
+    line-height: 1.6;
+  }
+
+  .section-title {
+    font-family: 'Russo One', sans-serif;
+    color: #ffcc00;
+    font-size: 24px;
+    text-align: center;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .section-divider {
+    width: 120px;
+    height: 3px;
+    background: linear-gradient(to right, #ff6600, #ffcc00, #ff6600);
+    margin: 0 auto 40px;
+    border-radius: 2px;
+  }
+
+  .how-to-play {
+    padding: 50px 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+  }
+
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 24px;
+    margin-top: 10px;
+  }
+
+  .step {
+    text-align: center;
+    padding: 20px;
+  }
+
+  .step-number {
+    font-family: 'Bungee Shade', cursive;
+    font-size: 36px;
+    color: #ff4444;
+    text-shadow: 2px 2px 0 #000;
+    margin-bottom: 10px;
+  }
+
+  .step h4 {
+    font-family: 'Russo One', sans-serif;
+    color: #fff;
+    font-size: 15px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .step p { font-size: 14px; color: #888; }
+
+  .cta {
+    text-align: center;
+    padding: 50px 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+  }
+
+  .cta p {
+    font-size: 18px;
+    color: #aaa;
+    margin-bottom: 24px;
+  }
+
+  .btn {
+    display: inline-block;
+    font-family: 'Russo One', sans-serif;
+    font-size: 16px;
+    color: #111;
+    background: linear-gradient(to bottom, #ffcc00, #ff8800);
+    padding: 14px 36px;
+    border-radius: 999px;
+    text-decoration: none;
+    border: none;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    box-shadow: 0 4px 20px rgba(255, 136, 0, 0.4);
+    transition: transform 0.15s;
+  }
+
+  .btn:hover { transform: scale(1.04); }
+
+  a {
+    color: #ff9944;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(255, 153, 68, 0.3);
+    transition: border-color 0.2s;
+  }
+
+  a:hover { border-bottom-color: #ff9944; }
+
+  .nav-links {
+    text-align: center;
+    padding: 24px 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+  }
+
+  .nav-links a { margin: 0 12px; font-size: 14px; }
+
+  @media (max-width: 480px) {
+    .hero { padding: 50px 16px 40px; }
+    .container { padding: 0 16px 60px; }
+    .features { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <h1>Rally Racer 2000</h1>
+  <div class="subtitle">Side-Scroll Championship</div>
+  <p class="tagline">A retro-inspired side-scrolling racer with blazing speed, custom cars, and a global leaderboard. How far can you go?</p>
+</div>
+
+<div class="container">
+
+  <div class="features">
+    <div class="feature">
+      <span class="feature-icon">🏎️</span>
+      <h3>Intense Racing</h3>
+      <p>Dodge traffic at breakneck speed on an endless desert highway. The further you go, the harder it gets.</p>
+    </div>
+    <div class="feature">
+      <span class="feature-icon">🔧</span>
+      <h3>Custom Garage</h3>
+      <p>Build your dream racer. Customize body color, cabin, wheels, headlights, and exhaust flame.</p>
+    </div>
+    <div class="feature">
+      <span class="feature-icon">🚀</span>
+      <h3>Boost System</h3>
+      <p>Charge your boost meter and unleash it for a burst of speed to weave through tight gaps.</p>
+    </div>
+    <div class="feature">
+      <span class="feature-icon">🏆</span>
+      <h3>Global Leaderboard</h3>
+      <p>Compete for the top 10. Submit your score and see how you stack up against players worldwide.</p>
+    </div>
+    <div class="feature">
+      <span class="feature-icon">🌅</span>
+      <h3>Retro Vibes</h3>
+      <p>Sunset skies, desert mountains, and a synthwave-inspired aesthetic that feels like the golden age of arcade racing.</p>
+    </div>
+    <div class="feature">
+      <span class="feature-icon">📱</span>
+      <h3>iPhone &amp; iPad</h3>
+      <p>Optimized touch controls for both devices. Landscape mode for the full widescreen racing experience.</p>
+    </div>
+  </div>
+
+  <div class="how-to-play">
+    <div class="section-title">How to Play</div>
+    <div class="section-divider"></div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-number">1</div>
+        <h4>Steer</h4>
+        <p>Use the left joystick to move up and down between lanes</p>
+      </div>
+      <div class="step">
+        <div class="step-number">2</div>
+        <h4>Accelerate</h4>
+        <p>Push the joystick right to speed up, left to brake</p>
+      </div>
+      <div class="step">
+        <div class="step-number">3</div>
+        <h4>Boost</h4>
+        <p>Tap the boost button for a burst of speed when your meter is full</p>
+      </div>
+      <div class="step">
+        <div class="step-number">4</div>
+        <h4>Survive</h4>
+        <p>Dodge cars and trucks as traffic gets faster and more aggressive</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="cta">
+    <p>Free to play. No ads. No in-app purchases.</p>
+    <a href="/" class="btn">Play Now</a>
+  </div>
+
+  <div class="nav-links">
+    <a href="/support.html">Support</a>
+    <a href="/privacy-policy.html">Privacy Policy</a>
+  </div>
+
+</div>
+
+</body>
+</html>
